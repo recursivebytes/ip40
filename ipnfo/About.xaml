@@ -23,18 +23,18 @@
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <TextBlock Text="Version:" />
-                <TextBlock Text="1.17" Grid.Column="1" />
+                <TextBlock Text="0.7" Grid.Column="1" />
                 <TextBlock Text="Datum:" Grid.Row="1" />
                 <TextBlock Text="10.06.2015" Grid.Column="1" Grid.Row="1" />
                 <TextBlock Text="Entwickler:" Grid.Row="2" />
                 <TextBlock Text="Stefan Tobert" Grid.Column="1" Grid.Row="2" />
                 <TextBlock Text="Lizenz:" Grid.Row="3" />
                 <TextBlock Grid.Column="1" Grid.Row="3">
-                    <Hyperlink TargetName="http://opensource.org/licenses/MIT">MIT</Hyperlink> 
+                    <Hyperlink TargetName="http://opensource.org/licenses/MIT" Click="Hyperlink_Click">MIT</Hyperlink> 
                 </TextBlock>
                 <TextBlock Text="Projektseite:" Grid.Row="4" />
                 <TextBlock Grid.Column="1" Grid.Row="4">
-                    <Hyperlink TargetName="http://ip46.codeplex.com">http://ip46.codeplex.com</Hyperlink>
+                    <Hyperlink TargetName="http://ip46.codeplex.com" Click="Hyperlink_Click">http://ip46.codeplex.com</Hyperlink>
                 </TextBlock>
             </Grid>
             <TextBlock Text="Vielen Dank an:" Margin="5,40,0,10" />

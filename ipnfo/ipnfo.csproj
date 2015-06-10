@@ -63,9 +63,12 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BooleanToTextConverter.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="InverseBooleanConverter.cs" />
     <Compile Include="LongToIPConverter.cs" />
+    <Compile Include="LongToSpeedConverter.cs" />
     <Compile Include="NIC.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="StatusToBrushConverter.cs" />

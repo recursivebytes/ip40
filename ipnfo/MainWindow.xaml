@@ -1,0 +1,185 @@
+﻿<Window x:Class="ipnfo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ipnfo" Closing="Window_Closing" 
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="IP46" Height="800" Width="650">
+    <Grid>
+        <Grid.Resources>
+            <BooleanToVisibilityConverter x:Key="b2v" />
+            <local:StatusToBrushConverter x:Key="s2b" />
+            <local:LongToIPConverter x:Key="l2ip" />
+            <local:InverseBooleanConverter x:Key="ib" />
+            <local:StatusToTextConverter x:Key="s2t" />
+            <local:BooleanToTextConverter x:Key="b2t" />
+            <local:LongToSpeedConverter x:Key="l2s" />
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Visibility="{Binding ElementName=showgeneral,Path=IsChecked,Converter={StaticResource b2v}}" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image />
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" MinWidth="120" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" MinWidth="130" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Computer: " />
+                <TextBlock Text="{Binding Computername,FallbackValue=???}" Grid.Column="1" />
+
+                <TextBlock Text="IP-Adresse: " Grid.Row="1" />
+                <TextBlock Text="{Binding CurrentNIC.IP, FallbackValue=???}" Grid.Row="1" Grid.Column="1" />
+
+                <TextBlock Text="Subnetzmaske: " Grid.Row="2" />
+                <TextBlock Text="{Binding CurrentNIC.SubnetMask}" Grid.Column="1" Grid.Row="2" />
+
+
+                <TextBlock Text="Typ: " Grid.Row="3" />
+                <TextBlock Text="{Binding CurrentNIC.UsesDHCP, Converter={StaticResource b2t}}" Grid.Column="1" Grid.Row="3" />
+
+                <TextBlock Text="Max. Geschw.: " Grid.Row="0" Grid.Column="2" />
+                <TextBlock Text="{Binding CurrentNIC.Speed, Converter={StaticResource l2s}}" Grid.Row="0" Grid.Column="3" />
+                <TextBlock Text="MAC-Adresse: " Grid.Row="1" Grid.Column="2" />
+                <TextBlock Text="{Binding CurrentNIC.MAC}" Grid.Column="3" Grid.Row="1" />
+                <TextBlock Text="Default Gateway: " Grid.Row="2" Grid.Column="2" />
+                <TextBlock Text="{Binding CurrentNIC.Gateway}" Grid.Column="3" Grid.Row="2" />
+                <TextBlock Text="Default DNS: " Grid.Row="3" Grid.Column="2" />
+                <TextBlock Text="{Binding CurrentNIC.DNS}" Grid.Column="3" Grid.Row="3" />
+
+                <TextBlock Text="Google-DNS (8.8.8.8): " Grid.Column="4" />
+                <TextBlock HorizontalAlignment="Left" Text="{Binding GoogleDNSStatus, Converter={StaticResource s2t}}" Background="{Binding GoogleDNSStatus, Converter={StaticResource s2b}}" Grid.Column="5" />
+                <TextBlock Text="Default DNS:" Grid.Row="1" Grid.Column="4" />
+                <TextBlock HorizontalAlignment="Left" Text="{Binding DNSStatus, Converter={StaticResource s2t}}" Background="{Binding DNSStatus, Converter={StaticResource s2b}}" Grid.Column="5" Grid.Row="1" />
+                <TextBlock Text="Default Gateway: " Grid.Column="4" Grid.Row="2" />
+                <TextBlock HorizontalAlignment="Left"  Text="{Binding GatewayStatus, Converter={StaticResource s2t}}" Background="{Binding GatewayStatus, Converter={StaticResource s2b}}" Grid.Row="2" Grid.Column="5" />
+                <TextBlock Text="Internet: " Grid.Column="4" Grid.Row="3" />
+                <TextBlock HorizontalAlignment="Left" Text="{Binding InternetStatus, Converter={StaticResource s2t}}" Background="{Binding InternetStatus, Converter={StaticResource s2b}}" Grid.Column="5" Grid.Row="3" />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" Visibility="{Binding ElementName=showccn, Path=IsChecked, Converter={StaticResource b2v}}">
+            <StackPanel Orientation="Horizontal" Margin="5,5,5,2" HorizontalAlignment="Center">
+                <TextBlock Text="Ansicht: " Visibility="Collapsed" />
+                <Button Content="&lt;" Width="20" Command="{Binding PreviousClassCNetworkCommand}" />
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0,5,0" Text="{Binding CurrentClassCNetwork, Mode=OneWay}" Width="100"></TextBlock>
+                <Button Content="&gt;" Width="20" Command="{Binding NextClassCNetworkCommand}" />
+            </StackPanel>
+
+        </Grid>
+        <ItemsControl Grid.Row="2" ItemsSource="{Binding ClassCDummies}" Height="300" MinWidth="500" Visibility="{Binding ElementName=showccn, Path=IsChecked, Converter={StaticResource b2v}}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="16" Rows="16" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="{Binding Host.VisibleStatus, Converter={StaticResource s2b}, Mode=OneWay, FallbackValue=LightGray}" Margin="1">
+                        <TextBlock Text="{Binding LastOctett, FallbackValue=.254}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        <!--<Border.ContextMenu>
+                            <ContextMenu>
+                                <TextBlock Text="{Binding IPAdress,FallbackValue=127.0.0.1}" />
+                                <TextBlock Text="{Binding Name,FallbackValue=Computer-Name}" />
+                                <MenuItem Header="Port-Scan" />
+                                <MenuItem Header="Refresh" />
+                                <MenuItem Header="In Explorer Öffnen" />
+                            </ContextMenu>
+                        </Border.ContextMenu>-->
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>       
+        <Grid Grid.Row="3">
+            <ListView ItemsSource="{Binding HostsOnline}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="IP" Width="100" DisplayMemberBinding="{Binding}" />
+                        <GridViewColumn Header="Name" Width="180" DisplayMemberBinding="{Binding Hostname,FallbackValue={}}" />
+                        <GridViewColumn Header="Ping (ms)" DisplayMemberBinding="{Binding Ping}" />
+                        <!--<GridViewColumn Header="Dienste / geöffnete Ports" Width="300" />-->
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <Expander Header="Optionen" IsExpanded="False" Margin="2">
+                <Grid Margin="10" IsEnabled="{Binding IsAnalyzing, Converter={StaticResource ib}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <CheckBox Content="Zeige Klasse C Netz" IsChecked="{Binding Config.ShowClassCView}" Name="showccn" />
+                        <CheckBox Content="Zeige Generell" IsChecked="{Binding Config.ShowSystemInformation}" Name="showgeneral" />
+                        <CheckBox Content="Auto-Scan bei Start" IsChecked="{Binding Config.AutoStart}" />
+                        <CheckBox Content="Auto-Fill values of Connection" IsChecked="{Binding Config.AutoFillRange}"  />
+                        <StackPanel Orientation="Horizontal" IsEnabled="False" Visibility="Collapsed">
+                            <CheckBox Content="Port-Scan" VerticalAlignment="Center" IsChecked="{Binding Config.PortScan}" />
+                            <Button Content="Einstellungen" Margin="5,0,0,0" />
+                        </StackPanel>
+
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <CheckBox Content="Auto-Blättern" IsChecked="{Binding Config.AutoScroll}"/>
+                        <CheckBox Content="Internet-Erreichbarkeit prüfen" IsChecked="{Binding Config.CheckInternet}"  />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Max. parallele Verbindungen: " />
+                            <xctk:IntegerUpDown Minimum="1" Maximum="99" Value="{Binding Config.MaxParallelConnections}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Ping-Timeout (ms): " />
+                            <xctk:IntegerUpDown Minimum="1" Width="60"  Value="{Binding Config.PingTimeout}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" >
+                            <Button Content="Hilfe" Margin="3" IsEnabled="False" Visibility="Collapsed"/>
+                            <Button Content="About..." Click="Button_Click" Margin="3" />
+                            <Button Content="Check for Updates" Margin="3" IsEnabled="False" Visibility="Collapsed" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+
+            </Expander>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,2,5,2">
+                <ComboBox  IsEnabled="{Binding IsAnalyzing, Converter={StaticResource ib}}" SelectedIndex="0" ItemsSource="{Binding NICs}" Width="150" SelectedItem="{Binding CurrentNIC, Mode=OneWayToSource}" SelectionChanged="ComboBox_SelectionChanged" />
+                <TextBlock Text="Von " VerticalAlignment="Center" Margin="3,0,3,0" />
+
+                <TextBox IsEnabled="{Binding IsAnalyzing, Converter={StaticResource ib}}" Text="{Binding Config.IPRangeStart, Converter={StaticResource l2ip}}" Width="100" VerticalAlignment="Center" />
+                <TextBlock Text="bis" VerticalAlignment="Center" Margin="3,0,3,0"/>
+                <TextBox IsEnabled="{Binding IsAnalyzing, Converter={StaticResource ib}}" Text="{Binding Config.IPRangeEnd, Converter={StaticResource l2ip}}" Width="100" VerticalAlignment="Center"  />
+                <Button Margin="3,0,0,0" Content="{Binding StartStopButtonText}" MinWidth="50" Command="{Binding StartStopCommand}" />
+            </StackPanel>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <!--<ColumnDefinition Width="*" />-->
+                </Grid.ColumnDefinitions>
+                <ProgressBar Height="14" Minimum="0" Maximum="100" Value="{Binding ScanProgress}" />
+                <TextBlock Text="{Binding ScanProgress,StringFormat={}{0:#}%,FallbackValue=0%}" HorizontalAlignment="Center" />
+                <!--<TextBlock Text="Scanning 192.168.1.14 - .255" Margin="5,0,5,0" Grid.Column="1" />-->
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

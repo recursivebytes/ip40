@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="ipnfo.IP"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Border Background="{Binding Status, FallbackValue=LightGray}" Margin="1">
+        <TextBlock Text="{Binding Text, FallbackValue=.254}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <Border.ContextMenu>
+            <ContextMenu>
+                <TextBlock Text="{Binding IPAdress,FallbackValue=127.0.0.1}" />
+                <TextBlock Text="{Binding Name,FallbackValue=Computer-Name}" />
+                <MenuItem Header="Port-Scan" />
+                <MenuItem Header="Refresh" />
+                <MenuItem Header="In Explorer Öffnen" />
+
+            </ContextMenu>
+        </Border.ContextMenu>
+    </Border>
+</UserControl>

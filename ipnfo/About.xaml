@@ -1,0 +1,53 @@
+﻿<Window x:Class="ipnfo.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" WindowStyle="ToolWindow" ResizeMode="NoResize"
+        Title="About" Height="300" Width="350">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="3*" />
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <TextBlock Text="IP46" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" />
+            <Grid HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" MinWidth="100" />
+                    <ColumnDefinition Width="auto" />                    
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Version:" />
+                <TextBlock Text="1.17" Grid.Column="1" />
+                <TextBlock Text="Datum:" Grid.Row="1" />
+                <TextBlock Text="10.06.2015" Grid.Column="1" Grid.Row="1" />
+                <TextBlock Text="Entwickler:" Grid.Row="2" />
+                <TextBlock Text="Stefan Tobert" Grid.Column="1" Grid.Row="2" />
+                <TextBlock Text="Lizenz:" Grid.Row="3" />
+                <TextBlock Grid.Column="1" Grid.Row="3">
+                    <Hyperlink TargetName="http://opensource.org/licenses/MIT">MIT</Hyperlink> 
+                </TextBlock>
+                <TextBlock Text="Projektseite:" Grid.Row="4" />
+                <TextBlock Grid.Column="1" Grid.Row="4">
+                    <Hyperlink TargetName="http://ip46.codeplex.com">http://ip46.codeplex.com</Hyperlink>
+                </TextBlock>
+            </Grid>
+            <TextBlock Text="Vielen Dank an:" Margin="5,40,0,10" />
+            <StackPanel Margin="5">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Yusuke Kamiyamane" FontWeight="Bold" />
+                    <TextBlock Text=", für einige der verwendeten Icons" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Xceed" FontWeight="Bold" />
+                    <TextBlock Text=", für einige der verwendeten Steuerelemente" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

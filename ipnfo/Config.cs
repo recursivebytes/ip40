@@ -90,12 +90,12 @@ namespace ipnfo
             CheckInternet = true;
             AutoFillRange = true;
             AutoStart = true;
-            PortScan = true;
+            PortScan = false;
             ShowClassCView = false;
             ShowSystemInformation = true;
             PingTimeout = 500;
-            IPRangeStart = new IPAddress(new byte[] { 192, 168, 178, 0 }).ToLong();
-            IPRangeEnd = new IPAddress(new byte[] { 192, 168, 178, 255 }).ToLong();
+            IPRangeStart = new IPAddress(new byte[] { 192, 168, 1, 0 }).ToLong();
+            IPRangeEnd = new IPAddress(new byte[] { 192, 168, 1, 255 }).ToLong();
         }
 
         public void Save()

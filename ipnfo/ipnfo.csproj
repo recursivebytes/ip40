@@ -64,12 +64,15 @@
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
     <Compile Include="BooleanToTextConverter.cs" />
+    <Compile Include="BoolToCursorConverter.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="InverseBooleanConverter.cs" />
     <Compile Include="LongToIPConverter.cs" />
     <Compile Include="LongToSpeedConverter.cs" />
     <Compile Include="NIC.cs" />
+    <Compile Include="PingToTextConverter.cs" />
+    <Compile Include="PortInformation.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="StatusToBrushConverter.cs" />
     <Compile Include="StatusToTextConverter.cs" />
@@ -130,6 +133,21 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\computer_link.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\disconnect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\wall-brick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\drive_network.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\information.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.1\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.1\build\Fody.targets')" />

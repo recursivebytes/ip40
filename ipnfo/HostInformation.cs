@@ -12,11 +12,13 @@ namespace ipnfo
     {
         public HostInformation(long ip)
         {
+            OpenPorts = new List<PortInformation>();
             IP = ip;
         }
 
         public HostInformation(string ip)
         {
+            OpenPorts = new List<PortInformation>();
             IP = IPAddress.Parse(ip).ToLong();
         }
 
@@ -78,8 +80,15 @@ namespace ipnfo
 
         public override string ToString()
         {
-            return Text;
+            return Text/*+", "+string.Join("|",OpenPorts.Select(s=>s.ShortName))*/;
         }
+
+        public List<PortInformation> OpenPorts
+        {
+            get { return Get<List<PortInformation>>("OpenPorts"); }
+            set { Set("OpenPorts", value); OnPropertyChanged("OpenPorts"); }
+        }
+
 
 
         public override object Clone()

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -48,6 +50,28 @@ namespace ipnfo
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             ((MainViewModel)DataContext).Config.Save();
+        }
+
+        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Border b = (Border)sender;
+            ((MainViewModel)DataContext).CallService((HostInformation)b.Tag, (PortInformation)b.DataContext);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+             Process.Start("explorer.exe", "::{7007ACC7-3202-11D1-AAD2-00805FC1270E}");            
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            string mmc = Environment.GetFolderPath(Environment.SpecialFolder.Windows)+"\\System32\\"+Thread.CurrentThread.CurrentCulture.ToString()+"\\WF.msc";
+            Process.Start(mmc);
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            Process.Start("control.exe", "/name Microsoft.NetworkAndSharingCenter");            
         }
     }
 }

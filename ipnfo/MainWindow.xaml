@@ -13,6 +13,8 @@
             <local:StatusToTextConverter x:Key="s2t" />
             <local:BooleanToTextConverter x:Key="b2t" />
             <local:LongToSpeedConverter x:Key="l2s" />
+            <local:PingToTextConverter x:Key="p2t" />
+            <local:BoolToCursorConverter x:Key="b2c" />
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -44,16 +46,16 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Text="Computer: " />
-                <TextBlock Text="{Binding Computername,FallbackValue=???}" Grid.Column="1" />
+                <TextBlock Text="{Binding Computername}" Grid.Column="1" />
 
                 <TextBlock Text="IP-Adresse: " Grid.Row="1" />
-                <TextBlock Text="{Binding CurrentNIC.IP, FallbackValue=???}" Grid.Row="1" Grid.Column="1" />
+                <TextBlock Text="{Binding CurrentNIC.IP}" Grid.Row="1" Grid.Column="1" />
 
                 <TextBlock Text="Subnetzmaske: " Grid.Row="2" />
                 <TextBlock Text="{Binding CurrentNIC.SubnetMask}" Grid.Column="1" Grid.Row="2" />
 
 
-                <TextBlock Text="Typ: " Grid.Row="3" />
+                <TextBlock Text="IP-Konfiguration: " Grid.Row="3" />
                 <TextBlock Text="{Binding CurrentNIC.UsesDHCP, Converter={StaticResource b2t}}" Grid.Column="1" Grid.Row="3" />
 
                 <TextBlock Text="Max. Geschw.: " Grid.Row="0" Grid.Column="2" />
@@ -73,6 +75,8 @@
                 <TextBlock HorizontalAlignment="Left"  Text="{Binding GatewayStatus, Converter={StaticResource s2t}}" Background="{Binding GatewayStatus, Converter={StaticResource s2b}}" Grid.Row="2" Grid.Column="5" />
                 <TextBlock Text="Internet: " Grid.Column="4" Grid.Row="3" />
                 <TextBlock HorizontalAlignment="Left" Text="{Binding InternetStatus, Converter={StaticResource s2t}}" Background="{Binding InternetStatus, Converter={StaticResource s2b}}" Grid.Column="5" Grid.Row="3" />
+
+                
             </Grid>
         </Grid>
         <Grid Grid.Row="1" Visibility="{Binding ElementName=showccn, Path=IsChecked, Converter={StaticResource b2v}}">
@@ -94,15 +98,7 @@
                 <DataTemplate>
                     <Border Background="{Binding Host.VisibleStatus, Converter={StaticResource s2b}, Mode=OneWay, FallbackValue=LightGray}" Margin="1">
                         <TextBlock Text="{Binding LastOctett, FallbackValue=.254}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        <!--<Border.ContextMenu>
-                            <ContextMenu>
-                                <TextBlock Text="{Binding IPAdress,FallbackValue=127.0.0.1}" />
-                                <TextBlock Text="{Binding Name,FallbackValue=Computer-Name}" />
-                                <MenuItem Header="Port-Scan" />
-                                <MenuItem Header="Refresh" />
-                                <MenuItem Header="In Explorer Öffnen" />
-                            </ContextMenu>
-                        </Border.ContextMenu>-->
+                        
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
@@ -113,8 +109,27 @@
                     <GridView>
                         <GridViewColumn Header="IP" Width="100" DisplayMemberBinding="{Binding}" />
                         <GridViewColumn Header="Name" Width="180" DisplayMemberBinding="{Binding Hostname,FallbackValue={}}" />
-                        <GridViewColumn Header="Ping (ms)" DisplayMemberBinding="{Binding Ping}" />
-                        <!--<GridViewColumn Header="Dienste / geöffnete Ports" Width="300" />-->
+                        <GridViewColumn Header="Ping" DisplayMemberBinding="{Binding Ping, Converter={StaticResource p2t}}" />
+                        <GridViewColumn Header="Dienste / geöffnete Ports" Width="300">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ItemsControl ItemsSource="{Binding OpenPorts}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="LightGreen" Margin="4,0,4,0" Cursor="{Binding HasService,Converter={StaticResource b2c}}" MouseLeftButtonDown="Border_MouseLeftButtonDown" Tag="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}">
+                                                    <TextBlock Text="{Binding Name}" />
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -131,18 +146,18 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <StackPanel>
-                        <CheckBox Content="Zeige Klasse C Netz" IsChecked="{Binding Config.ShowClassCView}" Name="showccn" />
-                        <CheckBox Content="Zeige Generell" IsChecked="{Binding Config.ShowSystemInformation}" Name="showgeneral" />
-                        <CheckBox Content="Auto-Scan bei Start" IsChecked="{Binding Config.AutoStart}" />
-                        <CheckBox Content="Auto-Fill values of Connection" IsChecked="{Binding Config.AutoFillRange}"  />
-                        <StackPanel Orientation="Horizontal" IsEnabled="False" Visibility="Collapsed">
+                        <CheckBox Content="Zeige Klasse-C-Netz Ansicht" IsChecked="{Binding Config.ShowClassCView}" Name="showccn" />
+                        <CheckBox Content="Zeige Netzwerkinformationen" IsChecked="{Binding Config.ShowSystemInformation}" Name="showgeneral" />
+                        <CheckBox Content="Starte Scan bei Programmstart" IsChecked="{Binding Config.AutoStart}" />
+                        <CheckBox Content="Bei Interface-Wechsel Adressbereich übernehmen" IsChecked="{Binding Config.AutoFillRange}"  />
+                        <StackPanel Orientation="Horizontal" >
                             <CheckBox Content="Port-Scan" VerticalAlignment="Center" IsChecked="{Binding Config.PortScan}" />
-                            <Button Content="Einstellungen" Margin="5,0,0,0" />
+                            <Button Content="Einstellungen" Margin="5,0,0,0" IsEnabled="False" Visibility="Collapsed" />
                         </StackPanel>
 
                     </StackPanel>
                     <StackPanel Grid.Column="1">
-                        <CheckBox Content="Auto-Blättern" IsChecked="{Binding Config.AutoScroll}"/>
+                        <CheckBox Content="Klasse-C-Netz Ansicht automatisch umblättern" IsChecked="{Binding Config.AutoScroll}"/>
                         <CheckBox Content="Internet-Erreichbarkeit prüfen" IsChecked="{Binding Config.CheckInternet}"  />
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Max. parallele Verbindungen: " />
@@ -154,7 +169,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" >
                             <Button Content="Hilfe" Margin="3" IsEnabled="False" Visibility="Collapsed"/>
-                            <Button Content="About..." Click="Button_Click" Margin="3" />
+                            
                             <Button Content="Check for Updates" Margin="3" IsEnabled="False" Visibility="Collapsed" />
                         </StackPanel>
                     </StackPanel>
@@ -176,8 +191,51 @@
                     <ColumnDefinition Width="2*" />
                     <!--<ColumnDefinition Width="*" />-->
                 </Grid.ColumnDefinitions>
-                <ProgressBar Height="14" Minimum="0" Maximum="100" Value="{Binding ScanProgress}" />
-                <TextBlock Text="{Binding ScanProgress,StringFormat={}{0:#}%,FallbackValue=0%}" HorizontalAlignment="Center" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <ProgressBar Height="18" Minimum="0" Maximum="100" Value="{Binding ScanProgress}" Margin="2,0,2,0" Grid.Column="1" />
+                    <TextBlock Text="{Binding ScanProgress,StringFormat={}{0:#}%,FallbackValue=0%}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" />
+
+                    <Button Grid.Column="2" Margin="2" ToolTip="Adaptereinstellungen öffnen" Click="Button_Click_1">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Icons/disconnect.png" />
+                                <TextBlock Text="Adapter" />
+                            </StackPanel>                            
+                        </Button.Content>
+                    </Button>
+                    <Button Grid.Column="3" Margin="2" ToolTip="Windows Firewalleinstellungen öffnen" Click="Button_Click_2">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Icons/wall-brick.png" />
+                                <TextBlock Text="Firewall" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <Button Grid.Column="4" Margin="2" ToolTip="Netzwerk- und Freigabecenter öffnen" Click="Button_Click_3">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Icons/drive_network.png" />
+                                <TextBlock Text="Freigabecenter" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                    <Button Grid.Column="0" Margin="2" ToolTip="Über IP46" Click="Button_Click">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Icons/information.png" />
+                                <TextBlock Text="Über..." />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </Grid>                
+                
                 <!--<TextBlock Text="Scanning 192.168.1.14 - .255" Margin="5,0,5,0" Grid.Column="1" />-->
             </Grid>
         </Grid>

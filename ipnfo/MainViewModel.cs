@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -25,6 +27,12 @@ namespace ipnfo
         {
             get { return Get<Config>("Config"); }
             set { Set("Config", value); OnPropertyChanged("Config"); }
+        }
+
+        public ObservableCollection<PortInformation> PortInformation
+        {
+            get { return Get<ObservableCollection<PortInformation>>("PortInformation"); }
+            set { Set("PortInformation", value); OnPropertyChanged("PortInformation"); }
         }
 
 
@@ -188,11 +196,46 @@ namespace ipnfo
         {
             Config = Config.Load();
             Hosts = new ObservableCollection<HostInformation>();
+            PortInformation = new ObservableCollection<ipnfo.PortInformation>();
             NICs = new ObservableCollection<NIC>();
+            ScanProgress = 0;
             
 
             ChangeClassCNetwork(new IPAddress(new byte[] { 192, 168, 178, 0 }));
             Task.Run(() => { DiscoverNICs(); });
+
+
+            PortInformation.Add(new PortInformation("HTTP", "Webserver", System.Net.Sockets.ProtocolType.Tcp, 80, 8080) { HasService=true });
+            PortInformation.Add(new PortInformation("FTP",  "File Transfer Protocol", System.Net.Sockets.ProtocolType.Tcp, 21, 20));
+            PortInformation.Add(new PortInformation("SSH",  "Secure Shell", System.Net.Sockets.ProtocolType.Tcp, 22));
+            PortInformation.Add(new PortInformation("Telnet", "Telnet", System.Net.Sockets.ProtocolType.Tcp, 23));
+            //PortInformation.Add(new PortInformation("SMTP", "SMTP", "Simple Mail Transfer Protocol", System.Net.Sockets.ProtocolType.Tcp, 25));
+            //PortInformation.Add(new PortInformation("DNS", "DNS", "DNS-Dienste", System.Net.Sockets.ProtocolType.Tcp, 53));
+            PortInformation.Add(new PortInformation("TFTP", "TFTP", System.Net.Sockets.ProtocolType.Udp, 69));
+            //PortInformation.Add(new PortInformation("POP2", "POP2", "POP2", System.Net.Sockets.ProtocolType.Tcp, 109));
+            //PortInformation.Add(new PortInformation("POP3", "POP3", "POP3", System.Net.Sockets.ProtocolType.Tcp, 110));
+            //PortInformation.Add(new PortInformation("IMAP", "IMAP", "IMAP Protocol", System.Net.Sockets.ProtocolType.Tcp, 143));
+            PortInformation.Add(new PortInformation("SMB", "SMB / Samba Dateifreigaben", System.Net.Sockets.ProtocolType.Tcp, 445) { HasService = true });
+
+
+            PortInformation.Add(new PortInformation("LDAP",  "LDAP-Verzeichnisdienst", System.Net.Sockets.ProtocolType.Tcp, 389));
+            //PortInformation.Add(new PortInformation("RIP", "RIP", "Routing-Information Protocol", System.Net.Sockets.ProtocolType.Tcp, 520));
+            PortInformation.Add(new PortInformation("MSSQL",  "Microsoft SQL-Datenbankserver", System.Net.Sockets.ProtocolType.Tcp, 1433,1434));
+            PortInformation.Add(new PortInformation("MySQL",  "MySQL-Datenbankserver", System.Net.Sockets.ProtocolType.Tcp, 3306));
+            PortInformation.Add(new PortInformation("PostgreSQL", "Postgre-Datenbankserver", System.Net.Sockets.ProtocolType.Tcp, 5432));
+            PortInformation.Add(new PortInformation("IRC", "Internet Relay Chat", System.Net.Sockets.ProtocolType.Tcp, 196));
+            PortInformation.Add(new PortInformation("FTPS",  "FTP über TLS", System.Net.Sockets.ProtocolType.Tcp, 989,990));
+           // PortInformation.Add(new PortInformation("IMAPS", "IMAPS", "IMAP über TLS", System.Net.Sockets.ProtocolType.Tcp, 993));
+            PortInformation.Add(new PortInformation("RADIUS", "RADIUS Authentifizierung", System.Net.Sockets.ProtocolType.Tcp, 1812,1813));
+            PortInformation.Add(new PortInformation("SVN",  "Subversion", System.Net.Sockets.ProtocolType.Tcp, 3690));
+
+
+
+
+
+
+
+
         }
 
         public override object Clone()
@@ -322,7 +365,7 @@ namespace ipnfo
 
         private bool CanStartStop()
         {
-            return true;
+            return CurrentNIC!=null;
         }
 
         private void OnStartStop(object parameter)
@@ -472,39 +515,88 @@ namespace ipnfo
 
         public async Task<HostInformation> CheckHost(HostInformation hi)
         {
-            Ping p = new Ping();
-            IPAddress target = hi.IP.ToIP();
-            PingReply pr = await p.SendPingAsync(target, Config.PingTimeout);
-            hi.Status = pr.Status == IPStatus.Success ? HostStatus.Online : HostStatus.Offline;
-            hi.Ping = (int)pr.RoundtripTime;
-
-            if (hi.Status == HostStatus.Online)
+            try
             {
-                try
-                {
-                    IPHostEntry hostEntry = Dns.GetHostEntry(target);
-                    hi.Hostname = hostEntry.HostName;
-                }
-                catch
-                {
+                Ping p = new Ping();
+                IPAddress target = hi.IP.ToIP();
+                PingReply pr = await p.SendPingAsync(target, Config.PingTimeout);
+                hi.Status = pr.Status == IPStatus.Success ? HostStatus.Online : HostStatus.Offline;
+                hi.Ping = (int)pr.RoundtripTime;
 
-                }
-
-                if (Config.PortScan)
+                if (hi.Status == HostStatus.Online)
                 {
+                    try
+                    {
+                        IPHostEntry hostEntry = Dns.GetHostEntry(target);
+                        hi.Hostname = hostEntry.HostName;
+                    }
+                    catch
+                    {
 
+                    }
+
+                    if (Config.PortScan)
+                    {
+
+                        foreach (var pi in PortInformation)
+                        {
+                            foreach (var port in pi.Ports)
+                            {
+                                try
+                                {
+                                    var client = new TcpClient();
+                                    var result = client.BeginConnect(target, port, null, null);
+                                    var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
+
+                                    if (success)
+                                    {
+                                        client.EndConnect(result);
+                                        hi.OpenPorts.Add(pi);
+                                    }
+
+                                    // we have connected
+
+                                    /*
+                                    TcpClient tcp = new TcpClient();
+                                    tcp.Connect(target, port);*/
+
+                                    break;
+                                }
+                                catch (SocketException)
+                                {
+
+                                }
+                            }
+                        }
+                    }
                 }
+
+
+                hi.Pending = false;
+
+                /*await Task.Delay(3000);
+                hi.Status = HostStatus.Offline;
+                hi.Pending = false;*/
+                return hi;
             }
-
-
-            hi.Pending = false;
-
-            /*await Task.Delay(3000);
-            hi.Status = HostStatus.Offline;
-            hi.Pending = false;*/
-            return hi;
+            catch
+            {
+                return hi;
+            }
         }
 
+        public void CallService(HostInformation hi, PortInformation pi)
+        {
+            switch(pi.Name)
+            {
+                case "HTTP":
+                    Process.Start(string.Format("http://{0}", hi.IP.ToIP()));
+                    break;
+                case "SMB":
+                    Process.Start("explorer.exe", "/e,/root,\\\\" + hi.IP.ToIP());
+                    break;
+            }
+        }
 
 
         public void AbortScan()

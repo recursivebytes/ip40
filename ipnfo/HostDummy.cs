@@ -18,9 +18,7 @@ namespace ipnfo
         public HostStatus Status
         {
             get
-            {
-                if (lastoctett == 0 || lastoctett == 255 )
-                    return HostStatus.Disabled;
+            {                
 
                 if (Host == null)
                     return HostStatus.Unknown;
@@ -49,10 +47,7 @@ namespace ipnfo
                         return Host.LastOctett;
                 }
                 else
-                {
-                    if (lastoctett == 0 || lastoctett == 255)
-                        return "";
-                    else
+                {                   
                         return lastoctett.ToString();
                 }
             }

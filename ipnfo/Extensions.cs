@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -44,6 +45,19 @@ namespace ipnfo
             for (; i < unit.Length && current >= 1000; i++)
                 current /= 1000;
             return string.Format("{0} {1}", current, unit[i]);
+        }
+
+        public static string ToFormattedMAC(this PhysicalAddress addr)
+        {
+            if (addr == null)
+                return "";
+
+            string mac = addr.ToString();
+            for (int i = mac.Length - 2; i > 0; i -= 2)
+            {
+                mac = mac.Insert(i, "-");
+            }
+            return mac;
         }
 
 

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,15 +27,23 @@ namespace ipnfo
     {
         public MainWindow()
         {
-            InitializeComponent();
-            MainViewModel mvm = new MainViewModel();
-            DataContext = mvm;
-            
-            mvm.FireAllPropertiesChanged();
 
-            if (mvm.Config.AutoStart)
-                if (mvm.StartStopCommand.CanExecute(null))
-                    mvm.StartStopCommand.Execute(null);
+            
+            InitializeComponent();
+            DataContextChanged += MainWindow_DataContextChanged;
+           
+        }
+
+        void MainWindow_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (DataContext != null)
+                ((MainViewModel)DataContext).PropertyChanged += mvm_PropertyChanged;
+        }
+
+        void mvm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IPRangeStart" || e.PropertyName == "IPRangeEnd")
+                mvm_PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs("StartStopButtonText"));
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -49,6 +60,7 @@ namespace ipnfo
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if(DataContext!=null)
             ((MainViewModel)DataContext).Config.Save();
         }
 
@@ -73,5 +85,17 @@ namespace ipnfo
         {
             Process.Start("control.exe", "/name Microsoft.NetworkAndSharingCenter");            
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if(DataContext!=null)
+            ((MainViewModel)DataContext).FireAllPropertiesChanged();
+        }
+
+
+
+
+
+
     }
 }

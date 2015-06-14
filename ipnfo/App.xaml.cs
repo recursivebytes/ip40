@@ -13,5 +13,17 @@ namespace ipnfo
     /// </summary>
     public partial class App : Application
     {
+        public MainViewModel ViewModel { get; set; }
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            ViewModel = new MainViewModel();
+
+
+            MainWindow mainView = new MainWindow();
+            mainView.Show();
+            mainView.DataContext = ViewModel;
+            
+        }
     }
 }

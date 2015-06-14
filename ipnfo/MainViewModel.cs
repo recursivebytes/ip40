@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -29,10 +30,13 @@ namespace ipnfo
             set { Set("Config", value); OnPropertyChanged("Config"); }
         }
 
-        public ObservableCollection<PortInformation> PortInformation
+        
+
+        public new void FireAllPropertiesChanged()
         {
-            get { return Get<ObservableCollection<PortInformation>>("PortInformation"); }
-            set { Set("PortInformation", value); OnPropertyChanged("PortInformation"); }
+            base.FireAllPropertiesChanged();
+            OnPropertyChanged("HostsOnline");
+            OnPropertyChanged("StartStopButtonText");
         }
 
 
@@ -188,7 +192,7 @@ namespace ipnfo
         {
             get
             {
-                return Hosts.Where(w => w.Status == HostStatus.Online);
+                return Hosts.Where(w => w.Status == HostStatus.Online || (w.Status == HostStatus.Offline && w.MAC != null) || (w.Status == HostStatus.Unknown && w.MAC != null)).OrderBy(o => o.Status);
             }
         }
 
@@ -196,7 +200,13 @@ namespace ipnfo
         {
             Config = Config.Load();
             Hosts = new ObservableCollection<HostInformation>();
-            PortInformation = new ObservableCollection<ipnfo.PortInformation>();
+            foreach (var hi in Config.RecentHosts)
+            {
+                hi.Status = HostStatus.Unknown;
+                Hosts.Add(hi);
+            }
+
+            
             NICs = new ObservableCollection<NIC>();
             ScanProgress = 0;
             
@@ -205,37 +215,9 @@ namespace ipnfo
             Task.Run(() => { DiscoverNICs(); });
 
 
-            PortInformation.Add(new PortInformation("HTTP", "Webserver", System.Net.Sockets.ProtocolType.Tcp, 80, 8080) { HasService=true });
-            PortInformation.Add(new PortInformation("FTP",  "File Transfer Protocol", System.Net.Sockets.ProtocolType.Tcp, 21, 20));
-            PortInformation.Add(new PortInformation("SSH",  "Secure Shell", System.Net.Sockets.ProtocolType.Tcp, 22));
-            PortInformation.Add(new PortInformation("Telnet", "Telnet", System.Net.Sockets.ProtocolType.Tcp, 23));
-            //PortInformation.Add(new PortInformation("SMTP", "SMTP", "Simple Mail Transfer Protocol", System.Net.Sockets.ProtocolType.Tcp, 25));
-            //PortInformation.Add(new PortInformation("DNS", "DNS", "DNS-Dienste", System.Net.Sockets.ProtocolType.Tcp, 53));
-            PortInformation.Add(new PortInformation("TFTP", "TFTP", System.Net.Sockets.ProtocolType.Udp, 69));
-            //PortInformation.Add(new PortInformation("POP2", "POP2", "POP2", System.Net.Sockets.ProtocolType.Tcp, 109));
-            //PortInformation.Add(new PortInformation("POP3", "POP3", "POP3", System.Net.Sockets.ProtocolType.Tcp, 110));
-            //PortInformation.Add(new PortInformation("IMAP", "IMAP", "IMAP Protocol", System.Net.Sockets.ProtocolType.Tcp, 143));
-            PortInformation.Add(new PortInformation("SMB", "SMB / Samba Dateifreigaben", System.Net.Sockets.ProtocolType.Tcp, 445) { HasService = true });
-
-
-            PortInformation.Add(new PortInformation("LDAP",  "LDAP-Verzeichnisdienst", System.Net.Sockets.ProtocolType.Tcp, 389));
-            //PortInformation.Add(new PortInformation("RIP", "RIP", "Routing-Information Protocol", System.Net.Sockets.ProtocolType.Tcp, 520));
-            PortInformation.Add(new PortInformation("MSSQL",  "Microsoft SQL-Datenbankserver", System.Net.Sockets.ProtocolType.Tcp, 1433,1434));
-            PortInformation.Add(new PortInformation("MySQL",  "MySQL-Datenbankserver", System.Net.Sockets.ProtocolType.Tcp, 3306));
-            PortInformation.Add(new PortInformation("PostgreSQL", "Postgre-Datenbankserver", System.Net.Sockets.ProtocolType.Tcp, 5432));
-            PortInformation.Add(new PortInformation("IRC", "Internet Relay Chat", System.Net.Sockets.ProtocolType.Tcp, 196));
-            PortInformation.Add(new PortInformation("FTPS",  "FTP über TLS", System.Net.Sockets.ProtocolType.Tcp, 989,990));
-           // PortInformation.Add(new PortInformation("IMAPS", "IMAPS", "IMAP über TLS", System.Net.Sockets.ProtocolType.Tcp, 993));
-            PortInformation.Add(new PortInformation("RADIUS", "RADIUS Authentifizierung", System.Net.Sockets.ProtocolType.Tcp, 1812,1813));
-            PortInformation.Add(new PortInformation("SVN",  "Subversion", System.Net.Sockets.ProtocolType.Tcp, 3690));
-
-
-
-
-
-
-
-
+            if (Config.AutoStart)
+                if (StartStopCommand.CanExecute(null))
+                    StartStopCommand.Execute(null);
         }
 
         public override object Clone()
@@ -317,6 +299,31 @@ namespace ipnfo
             set { Set("InternetStatus", value); OnPropertyChanged("InternetStatus"); }
         }
 
+        private ICommand cmdClearRecentHosts;
+        /// <summary>
+        /// ClearRecentHosts Command
+        /// </summary>
+        public ICommand ClearRecentHostsCommand
+        {
+            get
+            {
+                if (cmdClearRecentHosts == null)
+                    cmdClearRecentHosts = new RelayCommand(p => OnClearRecentHosts(p), p => CanClearRecentHosts());
+                return cmdClearRecentHosts;
+            }
+        }
+
+        private bool CanClearRecentHosts()
+        {
+            return Config.RecentHosts.Count>0;
+        }
+
+        private void OnClearRecentHosts(object parameter)
+        {
+            Config.RecentHosts.Clear();
+        }
+	
+
 
         public string StartStopButtonText
         {
@@ -328,7 +335,7 @@ namespace ipnfo
                 }
                 else
                 {
-                    return string.Format("Scannen ({0})", IPRangeCount);
+                    return string.Format("Scannen", IPRangeCount);
                 }
             }
         }
@@ -376,7 +383,10 @@ namespace ipnfo
             }
             else
             {
-                Task.Run(() => { Scan(); });
+                if (Config.UseICMP)
+                    Task.Run(() => { ScanICMP(); });
+                else
+                    Task.Run(() => { ScanARP(); });
             }
         }
 
@@ -405,8 +415,34 @@ namespace ipnfo
             set { Set("Stop", value); OnPropertyChanged("Stop"); }
         }
 
+        public async void ScanARP()
+        {
+            IsAnalyzing = true;
 
-        public async void Scan()
+            var l = GetAllDevicesOnLAN();
+            ScanProgress = 0;
+
+            var his = l.Select(s => new HostInformation(s.Key.ToString()) { MAC = s.Value });
+            Hosts.Clear();
+            foreach (var h in his)
+                Hosts.Add(h);
+
+            UpdateClassCDummies();
+
+            if (Config.CheckInternet && CurrentNIC != null)
+            {
+                await CheckConnectivity();
+            }
+            ScanProgress = 100;
+
+            
+            IsAnalyzing = false;
+            OnPropertyChanged("HostsOnline");
+            OnPropertyChanged("ClassCDummies");
+            FireAllPropertiesChanged();
+        }
+
+        public async void ScanICMP()
         {
             IsAnalyzing = true;
 
@@ -439,7 +475,7 @@ namespace ipnfo
                 z.ForEach(e => e.Status = HostStatus.Checking);
                 List<Task<HostInformation>> tasks = new List<Task<HostInformation>>();
                 foreach (var t in z)
-                    tasks.Add(CheckHost(t));
+                    tasks.Add(CheckHost(t,Config.PortInformation,Config.PingTimeout,Config.PortScan));
 
                 Task.WaitAll(tasks.ToArray());
                 OnPropertyChanged("HostsOnline");
@@ -451,6 +487,19 @@ namespace ipnfo
                 if (Config.AutoScroll && check > 0 && z.FirstOrDefault() != null)
                     ChangeClassCNetwork(z.First().IP.ToIP().ToLongNetwork().ToIP());
 
+            }
+
+            var l = GetAllDevicesOnLAN();
+            foreach(var d in l)
+            {
+                var f = Hosts.FirstOrDefault(a => a.IP == d.Key.ToLong());
+                if (f != null)
+                    f.MAC = d.Value;
+                else
+                    Hosts.Add(new HostInformation(d.Key.ToLong()) { MAC = d.Value });
+
+                if (!Config.RecentHosts.Any(a => a.MAC.ToString() == f.MAC.ToString()))
+                    Config.RecentHosts.Add(f);
             }
 
             if (Config.CheckInternet && CurrentNIC != null)
@@ -513,14 +562,14 @@ namespace ipnfo
             return true;
         }
 
-        public async Task<HostInformation> CheckHost(HostInformation hi)
+        public static async Task<HostInformation> CheckHost(HostInformation hi, List<PortInformation> PortInformation, int PingTimeout, bool PortScan, HostStatus elseStatus = HostStatus.Offline)
         {
             try
             {
                 Ping p = new Ping();
                 IPAddress target = hi.IP.ToIP();
-                PingReply pr = await p.SendPingAsync(target, Config.PingTimeout);
-                hi.Status = pr.Status == IPStatus.Success ? HostStatus.Online : HostStatus.Offline;
+                PingReply pr = await p.SendPingAsync(target, PingTimeout);
+                hi.Status = pr.Status == IPStatus.Success ? HostStatus.Online : elseStatus;
                 hi.Ping = (int)pr.RoundtripTime;
 
                 if (hi.Status == HostStatus.Online)
@@ -535,7 +584,7 @@ namespace ipnfo
 
                     }
 
-                    if (Config.PortScan)
+                    if (PortScan)
                     {
 
                         foreach (var pi in PortInformation)
@@ -603,5 +652,191 @@ namespace ipnfo
         {
             Stop = true;
         }
+
+
+
+
+
+        #region ARP Table
+
+        /// <summary>
+        /// MIB_IPNETROW structure returned by GetIpNetTable
+        /// DO NOT MODIFY THIS STRUCTURE.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        struct MIB_IPNETROW
+        {
+            [MarshalAs(UnmanagedType.U4)]
+            public int dwIndex;
+            [MarshalAs(UnmanagedType.U4)]
+            public int dwPhysAddrLen;
+            [MarshalAs(UnmanagedType.U1)]
+            public byte mac0;
+            [MarshalAs(UnmanagedType.U1)]
+            public byte mac1;
+            [MarshalAs(UnmanagedType.U1)]
+            public byte mac2;
+            [MarshalAs(UnmanagedType.U1)]
+            public byte mac3;
+            [MarshalAs(UnmanagedType.U1)]
+            public byte mac4;
+            [MarshalAs(UnmanagedType.U1)]
+            public byte mac5;
+            [MarshalAs(UnmanagedType.U1)]
+            public byte mac6;
+            [MarshalAs(UnmanagedType.U1)]
+            public byte mac7;
+            [MarshalAs(UnmanagedType.U4)]
+            public int dwAddr;
+            [MarshalAs(UnmanagedType.U4)]
+            public int dwType;
+        }
+
+        /// <summary>
+        /// GetIpNetTable external method
+        /// </summary>
+        /// <param name="pIpNetTable"></param>
+        /// <param name="pdwSize"></param>
+        /// <param name="bOrder"></param>
+        /// <returns></returns>
+        [DllImport("IpHlpApi.dll")]
+        [return: MarshalAs(UnmanagedType.U4)]
+        static extern int GetIpNetTable(IntPtr pIpNetTable,
+              [MarshalAs(UnmanagedType.U4)] ref int pdwSize, bool bOrder);
+
+        /// <summary>
+        /// Error codes GetIpNetTable returns that we recognise
+        /// </summary>
+        const int ERROR_INSUFFICIENT_BUFFER = 122;
+        /// <summary>
+        /// Get the IP and MAC addresses of all known devices on the LAN
+        /// </summary>
+        /// <remarks>
+        /// 1) This table is not updated often - it can take some human-scale time 
+        ///    to notice that a device has dropped off the network, or a new device
+        ///    has connected.
+        /// 2) This discards non-local devices if they are found - these are multicast
+        ///    and can be discarded by IP address range.
+        /// </remarks>
+        /// <returns></returns>
+        private static Dictionary<IPAddress, PhysicalAddress> GetAllDevicesOnLAN()
+        {
+            Dictionary<IPAddress, PhysicalAddress> all = new Dictionary<IPAddress, PhysicalAddress>();
+            // Add this PC to the list...
+            all.Add(GetIPAddress(), GetMacAddress());
+            int spaceForNetTable = 0;
+            // Get the space needed
+            // We do that by requesting the table, but not giving any space at all.
+            // The return value will tell us how much we actually need.
+            GetIpNetTable(IntPtr.Zero, ref spaceForNetTable, false);
+            // Allocate the space
+            // We use a try-finally block to ensure release.
+            IntPtr rawTable = IntPtr.Zero;
+            try
+            {
+                rawTable = Marshal.AllocCoTaskMem(spaceForNetTable);
+                // Get the actual data
+                int errorCode = GetIpNetTable(rawTable, ref spaceForNetTable, false);
+                if (errorCode != 0)
+                {
+                    // Failed for some reason - can do no more here.
+                    throw new Exception(string.Format(
+                      "Unable to retrieve network table. Error code {0}", errorCode));
+                }
+                // Get the rows count
+                int rowsCount = Marshal.ReadInt32(rawTable);
+                IntPtr currentBuffer = new IntPtr(rawTable.ToInt64() + Marshal.SizeOf(typeof(Int32)));
+                // Convert the raw table to individual entries
+                MIB_IPNETROW[] rows = new MIB_IPNETROW[rowsCount];
+                for (int index = 0; index < rowsCount; index++)
+                {
+                    rows[index] = (MIB_IPNETROW)Marshal.PtrToStructure(new IntPtr(currentBuffer.ToInt64() +
+                                                (index * Marshal.SizeOf(typeof(MIB_IPNETROW)))
+                                               ),
+                                                typeof(MIB_IPNETROW));
+                }
+                // Define the dummy entries list (we can discard these)
+                PhysicalAddress virtualMAC = new PhysicalAddress(new byte[] { 0, 0, 0, 0, 0, 0 });
+                PhysicalAddress broadcastMAC = new PhysicalAddress(new byte[] { 255, 255, 255, 255, 255, 255 });
+                foreach (MIB_IPNETROW row in rows)
+                {
+                    IPAddress ip = new IPAddress(BitConverter.GetBytes(row.dwAddr));
+                    byte[] rawMAC = new byte[] { row.mac0, row.mac1, row.mac2, row.mac3, row.mac4, row.mac5 };
+                    PhysicalAddress pa = new PhysicalAddress(rawMAC);
+                    if (!pa.Equals(virtualMAC) && !pa.Equals(broadcastMAC) && !IsMulticast(ip))
+                    {
+                        //Console.WriteLine("IP: {0}\t\tMAC: {1}", ip.ToString(), pa.ToString());
+                        if (!all.ContainsKey(ip))
+                        {
+                            all.Add(ip, pa);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                // Release the memory.
+                Marshal.FreeCoTaskMem(rawTable);
+            }
+            return all;
+        }
+
+        /// <summary>
+        /// Gets the IP address of the current PC
+        /// </summary>
+        /// <returns></returns>
+        private static IPAddress GetIPAddress()
+        {
+            String strHostName = Dns.GetHostName();
+            IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
+            IPAddress[] addr = ipEntry.AddressList;
+            foreach (IPAddress ip in addr)
+            {
+                if (!ip.IsIPv6LinkLocal)
+                {
+                    return (ip);
+                }
+            }
+            return addr.Length > 0 ? addr[0] : null;
+        }
+
+        /// <summary>
+        /// Gets the MAC address of the current PC.
+        /// </summary>
+        /// <returns></returns>
+        private static PhysicalAddress GetMacAddress()
+        {
+            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                // Only consider Ethernet network interfaces
+                if (nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet &&
+                    nic.OperationalStatus == OperationalStatus.Up)
+                {
+                    return nic.GetPhysicalAddress();
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns true if the specified IP address is a multicast address
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <returns></returns>
+        private static bool IsMulticast(IPAddress ip)
+        {
+            bool result = true;
+            if (!ip.IsIPv6Multicast)
+            {
+                byte highIP = ip.GetAddressBytes()[0];
+                if (highIP < 224 || highIP > 239)
+                {
+                    result = false;
+                }
+            }
+            return result;
+        }
+
+#endregion
     }
 }

@@ -13,13 +13,8 @@ namespace ipnfo
 
         public NIC(NetworkInterface nic)
         {
-            NetworkInterface = nic;
-            string mac = NetworkInterface.GetPhysicalAddress().ToString();
-            for (int i = mac.Length - 2; i > 0; i -= 2)
-            {
-                mac = mac.Insert(i, "-");
-            }
-            MAC = mac;
+            NetworkInterface = nic;          
+            MAC = NetworkInterface.GetPhysicalAddress();
             Speed = NetworkInterface.Speed;
 
             if (NetworkInterface.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || NetworkInterface.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
@@ -90,9 +85,9 @@ namespace ipnfo
             set { Set("SubnetMask", value); OnPropertyChanged("SubnetMask"); }
         }
 
-        public string MAC
+        public PhysicalAddress MAC
         {
-            get { return Get<string>("MAC"); }
+            get { return Get<PhysicalAddress>("MAC"); }
             set { Set("MAC", value); OnPropertyChanged("MAC"); }
         }
 

@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:ipnfo" Closing="Window_Closing" 
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="IP46" Height="800" Width="650">
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" Loaded="Window_Loaded"
+        Title="IP46" Height="800" Width="700">
     <Grid>
         <Grid.Resources>
             <BooleanToVisibilityConverter x:Key="b2v" />
@@ -15,6 +15,8 @@
             <local:LongToSpeedConverter x:Key="l2s" />
             <local:PingToTextConverter x:Key="p2t" />
             <local:BoolToCursorConverter x:Key="b2c" />
+            <local:MACToStringConverter x:Key="m2s" />
+            <local:HostStatusToIconConverter x:Key="hs2i" />
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -61,7 +63,7 @@
                 <TextBlock Text="Max. Geschw.: " Grid.Row="0" Grid.Column="2" />
                 <TextBlock Text="{Binding CurrentNIC.Speed, Converter={StaticResource l2s}}" Grid.Row="0" Grid.Column="3" />
                 <TextBlock Text="MAC-Adresse: " Grid.Row="1" Grid.Column="2" />
-                <TextBlock Text="{Binding CurrentNIC.MAC}" Grid.Column="3" Grid.Row="1" />
+                <TextBlock Text="{Binding CurrentNIC.MAC, Converter={StaticResource m2s}}" Grid.Column="3" Grid.Row="1" />
                 <TextBlock Text="Default Gateway: " Grid.Row="2" Grid.Column="2" />
                 <TextBlock Text="{Binding CurrentNIC.Gateway}" Grid.Column="3" Grid.Row="2" />
                 <TextBlock Text="Default DNS: " Grid.Row="3" Grid.Column="2" />
@@ -107,8 +109,33 @@
             <ListView ItemsSource="{Binding HostsOnline}">
                 <ListView.View>
                     <GridView>
+                        <GridViewColumn>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding VisibleStatus,Converter={StaticResource hs2i}}" Width="16" Height="16" />
+                                    <Button Visibility="{Binding CanWOL,Converter={StaticResource b2v}}" Command="{Binding WakeOnLanCommand}">
+                                        <Button.Template>
+                                                <ControlTemplate>
+                                                    <Image Source="Icons/computer_go.png" Width="16" Height="16" ToolTip="Sende Wake-on-LAN (WOL) Paket" />
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                    </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                         <GridViewColumn Header="IP" Width="100" DisplayMemberBinding="{Binding}" />
                         <GridViewColumn Header="Name" Width="180" DisplayMemberBinding="{Binding Hostname,FallbackValue={}}" />
+                        <GridViewColumn Header="MAC" Width="140">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">                                       
+                                        <TextBlock Text="{Binding MAC, Converter={StaticResource m2s}}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                         <GridViewColumn Header="Ping" DisplayMemberBinding="{Binding Ping, Converter={StaticResource p2t}}" />
                         <GridViewColumn Header="Dienste / geöffnete Ports" Width="300">
                             <GridViewColumn.CellTemplate>
@@ -172,7 +199,31 @@
                             
                             <Button Content="Check for Updates" Margin="3" IsEnabled="False" Visibility="Collapsed" />
                         </StackPanel>
+                        <!--<StackPanel Orientation="Horizontal" >
+                            <TextBlock Text="Scan-Methode:" />
+                            <RadioButton Content="ICMP (Ping)" IsChecked="{Binding Config.UseICMP}" GroupName="method" />
+                            <RadioButton Content="ARP-Tabelle" IsChecked="{Binding Config.UseICMP,Converter={StaticResource ib}}"  GroupName="method"/>
+                        </StackPanel>-->
+                        <StackPanel Orientation="Horizontal">                           
+                            <Button Visibility="Collapsed" Grid.Column="0" Margin="2" ToolTip="Bekannte Rechner aus Verlauf löschen" Command="{Binding ClearRecentHostsCommand}">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Icons/time_delete.png" />
+                                        <TextBlock Text="Verlauf leeren" />
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                            <Button Grid.Column="0" Margin="10,2,2,2" ToolTip="Über IP46" Click="Button_Click">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="Icons/information.png" />
+                                        <TextBlock Text="Über..." />
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
                     </StackPanel>
+                    
                 </Grid>
 
             </Expander>
@@ -226,14 +277,7 @@
                             </StackPanel>
                         </Button.Content>
                     </Button>
-                    <Button Grid.Column="0" Margin="2" ToolTip="Über IP46" Click="Button_Click">
-                        <Button.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="Icons/information.png" />
-                                <TextBlock Text="Über..." />
-                            </StackPanel>
-                        </Button.Content>
-                    </Button>
+                    
                 </Grid>                
                 
                 <!--<TextBlock Text="Scanning 192.168.1.14 - .255" Margin="5,0,5,0" Grid.Column="1" />-->

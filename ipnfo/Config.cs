@@ -74,14 +74,27 @@ namespace ipnfo
         public long IPRangeStart
         {
             get { return Get<long>("IPRangeStart"); }
-            set { Set("IPRangeStart", value); OnPropertyChanged("IPRangeStart"); OnPropertyChanged("IPRangeCount"); OnPropertyChanged("StartStopButtonText"); }
+            set { Set("IPRangeStart", value); OnPropertyChanged("IPRangeStart");  }
         }
 
         public long IPRangeEnd
         {
             get { return Get<long>("IPRangeEnd"); }
-            set { Set("IPRangeEnd", value); OnPropertyChanged("IPRangeEnd"); OnPropertyChanged("IPRangeCount"); OnPropertyChanged("StartStopButtonText"); }
+            set { Set("IPRangeEnd", value); OnPropertyChanged("IPRangeEnd");  }
         }
+
+        public bool UseICMP
+        {
+            get { return Get<bool>("UseICMP"); }
+            set { Set("UseICMP", value); OnPropertyChanged("UseICMP"); }
+        }
+
+        public List<HostInformation> RecentHosts
+        {
+            get { return Get<List<HostInformation>>("RecentHosts"); }
+            set { Set("RecentHosts", value); OnPropertyChanged("RecentHosts"); }
+        }
+
 
         public Config()
         {
@@ -94,8 +107,37 @@ namespace ipnfo
             ShowClassCView = false;
             ShowSystemInformation = true;
             PingTimeout = 500;
+            UseICMP = false;
             IPRangeStart = new IPAddress(new byte[] { 192, 168, 1, 0 }).ToLong();
             IPRangeEnd = new IPAddress(new byte[] { 192, 168, 1, 255 }).ToLong();
+            RecentHosts = new List<HostInformation>();
+            PortInformation = new List<PortInformation>();
+
+            PortInformation.Add(new PortInformation("HTTP", "Webserver", System.Net.Sockets.ProtocolType.Tcp, 80, 8080) { HasService = true });
+            PortInformation.Add(new PortInformation("FTP", "File Transfer Protocol", System.Net.Sockets.ProtocolType.Tcp, 21, 20));
+            PortInformation.Add(new PortInformation("SSH", "Secure Shell", System.Net.Sockets.ProtocolType.Tcp, 22));
+            PortInformation.Add(new PortInformation("Telnet", "Telnet", System.Net.Sockets.ProtocolType.Tcp, 23));
+            //PortInformation.Add(new PortInformation("SMTP", "SMTP", "Simple Mail Transfer Protocol", System.Net.Sockets.ProtocolType.Tcp, 25));
+            //PortInformation.Add(new PortInformation("DNS", "DNS", "DNS-Dienste", System.Net.Sockets.ProtocolType.Tcp, 53));
+            PortInformation.Add(new PortInformation("TFTP", "TFTP", System.Net.Sockets.ProtocolType.Udp, 69));
+            //PortInformation.Add(new PortInformation("POP2", "POP2", "POP2", System.Net.Sockets.ProtocolType.Tcp, 109));
+            //PortInformation.Add(new PortInformation("POP3", "POP3", "POP3", System.Net.Sockets.ProtocolType.Tcp, 110));
+            //PortInformation.Add(new PortInformation("IMAP", "IMAP", "IMAP Protocol", System.Net.Sockets.ProtocolType.Tcp, 143));
+            PortInformation.Add(new PortInformation("SMB", "SMB / Samba Dateifreigaben", System.Net.Sockets.ProtocolType.Tcp, 445) { HasService = true });
+
+
+            PortInformation.Add(new PortInformation("LDAP", "LDAP-Verzeichnisdienst", System.Net.Sockets.ProtocolType.Tcp, 389));
+            //PortInformation.Add(new PortInformation("RIP", "RIP", "Routing-Information Protocol", System.Net.Sockets.ProtocolType.Tcp, 520));
+            PortInformation.Add(new PortInformation("MSSQL", "Microsoft SQL-Datenbankserver", System.Net.Sockets.ProtocolType.Tcp, 1433, 1434));
+            PortInformation.Add(new PortInformation("MySQL", "MySQL-Datenbankserver", System.Net.Sockets.ProtocolType.Tcp, 3306));
+            PortInformation.Add(new PortInformation("PostgreSQL", "Postgre-Datenbankserver", System.Net.Sockets.ProtocolType.Tcp, 5432));
+            PortInformation.Add(new PortInformation("IRC", "Internet Relay Chat", System.Net.Sockets.ProtocolType.Tcp, 196));
+            PortInformation.Add(new PortInformation("FTPS", "FTP über TLS", System.Net.Sockets.ProtocolType.Tcp, 989, 990));
+            // PortInformation.Add(new PortInformation("IMAPS", "IMAPS", "IMAP über TLS", System.Net.Sockets.ProtocolType.Tcp, 993));
+            PortInformation.Add(new PortInformation("RADIUS", "RADIUS Authentifizierung", System.Net.Sockets.ProtocolType.Tcp, 1812, 1813));
+            PortInformation.Add(new PortInformation("SVN", "Subversion", System.Net.Sockets.ProtocolType.Tcp, 3690));
+
+
         }
 
         public void Save()
@@ -110,6 +152,13 @@ namespace ipnfo
             {
                 s.Serialize(sw, this);
             }            
+        }
+
+        [XmlIgnore]
+        public List<PortInformation> PortInformation
+        {
+            get { return Get<List<PortInformation>>("PortInformation"); }
+            set { Set("PortInformation", value); OnPropertyChanged("PortInformation"); }
         }
 
         public static Config Load()

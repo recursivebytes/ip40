@@ -117,7 +117,7 @@
                                     <Button Visibility="{Binding CanWOL,Converter={StaticResource b2v}}" Command="{Binding WakeOnLanCommand}">
                                         <Button.Template>
                                                 <ControlTemplate>
-                                                    <Image Source="Icons/computer_go.png" Width="16" Height="16" ToolTip="Sende Wake-on-LAN (WOL) Paket" />
+                                                    <Image Source="Icons/box.png" Width="16" Height="16" ToolTip="Sende Wake-on-LAN (WOL) Paket" />
                                                 </ControlTemplate>
                                             </Button.Template>
                                     </Button>
@@ -136,7 +136,20 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Ping" DisplayMemberBinding="{Binding Ping, Converter={StaticResource p2t}}" />
+                        <GridViewColumn Header="Ping">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource p2t}">
+                                                <Binding Path="Ping" />
+                                                <Binding Path="Status" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                         <GridViewColumn Header="Dienste / geöffnete Ports" Width="300">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
@@ -221,6 +234,10 @@
                                     </StackPanel>
                                 </Button.Content>
                             </Button>
+                            <TextBlock Text="Benutzeroberfläche: " />
+                            <ComboBox SelectedItem="{Binding Config.GUIType}"  SelectedIndex="0" local:EnumHelper.Enum="{x:Type local:GUIType}">
+                                
+                            </ComboBox>
                         </StackPanel>
                     </StackPanel>
                     

@@ -23,9 +23,9 @@
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <TextBlock Text="Version:" />
-                <TextBlock Text="1.0" Grid.Column="1" />
+                <TextBlock Text="1.1" Grid.Column="1" />
                 <TextBlock Text="Datum:" Grid.Row="1" />
-                <TextBlock Text="10.06.2015" Grid.Column="1" Grid.Row="1" />
+                <TextBlock Text="27.07.2015" Grid.Column="1" Grid.Row="1" />
                 <TextBlock Text="Entwickler:" Grid.Row="2" />
                 <TextBlock Text="Stefan Tobert" Grid.Column="1" Grid.Row="2" />
                 <TextBlock Text="Lizenz:" Grid.Row="3" />

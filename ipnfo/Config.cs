@@ -95,6 +95,12 @@ namespace ipnfo
             set { Set("RecentHosts", value); OnPropertyChanged("RecentHosts"); }
         }
 
+        public GUIType GUIType
+        {
+            get { return Get<GUIType>("GUIType"); }
+            set { Set("GUIType", value); OnPropertyChanged("GUIType"); }
+        }
+
 
         public Config()
         {
@@ -104,14 +110,15 @@ namespace ipnfo
             AutoFillRange = true;
             AutoStart = true;
             PortScan = false;
-            ShowClassCView = false;
+            ShowClassCView = true;
             ShowSystemInformation = true;
             PingTimeout = 500;
-            UseICMP = false;
-            IPRangeStart = new IPAddress(new byte[] { 192, 168, 1, 0 }).ToLong();
-            IPRangeEnd = new IPAddress(new byte[] { 192, 168, 1, 255 }).ToLong();
+            UseICMP = true;
+            IPRangeStart = new IPAddress(new byte[] { 192, 168, 1, 1 }).ToLong();
+            IPRangeEnd = new IPAddress(new byte[] { 192, 168, 1, 254 }).ToLong();
             RecentHosts = new List<HostInformation>();
             PortInformation = new List<PortInformation>();
+            GUIType = ipnfo.GUIType.Auto;
 
             PortInformation.Add(new PortInformation("HTTP", "Webserver", System.Net.Sockets.ProtocolType.Tcp, 80, 8080) { HasService = true });
             PortInformation.Add(new PortInformation("FTP", "File Transfer Protocol", System.Net.Sockets.ProtocolType.Tcp, 21, 20));

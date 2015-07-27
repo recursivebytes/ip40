@@ -19,7 +19,7 @@ namespace ipnfo
         /// </summary>
         public HostInformation()
         {
-
+            OpenPorts = new List<PortInformation>();
         }
 
         public HostInformation(long ip)

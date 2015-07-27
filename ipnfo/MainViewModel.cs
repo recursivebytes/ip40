@@ -30,7 +30,12 @@ namespace ipnfo
             set { Set("Config", value); OnPropertyChanged("Config"); }
         }
 
-        
+        public TouchView View
+        {
+            get { return Get<TouchView>("View"); }
+            set { Set("View", value); OnPropertyChanged("View"); }
+        }
+
 
         public new void FireAllPropertiesChanged()
         {
@@ -67,7 +72,7 @@ namespace ipnfo
 
             HostInformation[] his = Hosts.Where(w => w.IP >= start && w.IP <= end).ToArray();
 
-            for (int i = 0; i < 256; i++)
+            for (int i = 1; i < 255; i++)
             {
                 //ClassCDummies[i].Text = string.Format("{0}.{1}.{2}.{3}", (int)b[0], (int)b[1], (int)b[2], i);
                 //ClassCDummies[i].MVM = this;
@@ -237,8 +242,8 @@ namespace ipnfo
                 string ip = CurrentNIC.IP;
                 if (!string.IsNullOrEmpty(ip))
                 {
-                    long start = IPAddress.Parse(ip).ToLongNetwork();
-                    long end = start + 255;
+                    long start = IPAddress.Parse(ip).ToLongNetwork()+1;
+                    long end = start + 253;
                     Config.IPRangeStart = start;
                     Config.IPRangeEnd = end;
                 }
@@ -532,7 +537,8 @@ namespace ipnfo
             {
                 Ping p2 = new Ping();
                 PingReply pr2 = await p2.SendPingAsync(CurrentNIC.Gateway, Config.PingTimeout);
-                GatewayStatus = pr2.Status == IPStatus.Success ? HostStatus.Online : HostStatus.Offline;
+                var entry = Dns.GetHostEntry("example.com");
+                GatewayStatus = entry.AddressList.Length>0 && pr2.Status == IPStatus.Success ? HostStatus.Online : HostStatus.Offline;
             }
             catch
             {
@@ -586,37 +592,35 @@ namespace ipnfo
 
                     if (PortScan)
                     {
-
-                        foreach (var pi in PortInformation)
+                        Parallel.ForEach(PortInformation, pi =>
                         {
-                            foreach (var port in pi.Ports)
-                            {
-                                try
+                                Parallel.ForEach(pi.Ports, el =>
                                 {
-                                    var client = new TcpClient();
-                                    var result = client.BeginConnect(target, port, null, null);
-                                    var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
-
-                                    if (success)
+                                    try
                                     {
-                                        client.EndConnect(result);
-                                        hi.OpenPorts.Add(pi);
+                                        var client = new TcpClient();
+                                        var result = client.BeginConnect(target, el, null, null);
+                                        var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
+
+                                        if (success)
+                                        {
+                                            client.EndConnect(result);
+                                            hi.OpenPorts.Add(pi);
+                                        }
+
+                                        // we have connected
+
+                                        /*
+                                        TcpClient tcp = new TcpClient();
+                                        tcp.Connect(target, port);*/
+
                                     }
+                                    catch (SocketException)
+                                    {
 
-                                    // we have connected
-
-                                    /*
-                                    TcpClient tcp = new TcpClient();
-                                    tcp.Connect(target, port);*/
-
-                                    break;
-                                }
-                                catch (SocketException)
-                                {
-
-                                }
-                            }
-                        }
+                                    }
+                                });
+                        });
                     }
                 }
 
@@ -633,6 +637,7 @@ namespace ipnfo
                 return hi;
             }
         }
+
 
         public void CallService(HostInformation hi, PortInformation pi)
         {

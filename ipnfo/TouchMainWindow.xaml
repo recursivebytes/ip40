@@ -212,12 +212,12 @@
                                                         </TextBlock>                                                       
                                                         
                                                         <Image Grid.Row="2" Margin="5,0,0,0"  />
-                                                        <TextBlock Text="{Binding Hostname}" Grid.Row="2" FontSize="24" FontWeight="Bold"  Grid.Column="1" />
+                                                        <TextBlock Text="{Binding Hostname}"  local:TextBlockHelper.CopyOnClick="true" Grid.Row="2" FontSize="24" FontWeight="Bold"  Grid.Column="1" />
 
                                                         <Image Grid.Row="3" Margin="5,0,0,0"  />
-                                                        <TextBlock Text="{Binding MAC, Converter={StaticResource m2s}}" FontSize="24" FontWeight="Bold" Grid.Row="3" Grid.Column="1" Margin="0,0,5,0" />
+                                                        <TextBlock Text="{Binding MAC, Converter={StaticResource m2s}}" FontSize="24" local:TextBlockHelper.CopyOnClick="true" FontWeight="Bold" Grid.Row="3" Grid.Column="1" Margin="0,0,5,0" />
                                                        
-                                                        <ListView Grid.Row="4" MinHeight="0" Grid.ColumnSpan="3" MaxHeight="300" ItemsSource="{Binding OpenPorts}">
+                                                        <ListView Grid.Row="4" MinHeight="0" Grid.ColumnSpan="3" MaxHeight="300" ItemsSource="{Binding OpenPorts}" Visibility="Collapsed">
                                                             <ListView.View>
                                                                 <GridView ColumnHeaderContainerStyle="{StaticResource portheader}" >
                                                                     <GridViewColumn DisplayMemberBinding="{Binding Name}" />
@@ -266,14 +266,14 @@
                                                     <GridViewColumn Header="IP" Width="150">
                                                         <GridViewColumn.CellTemplate>
                                                             <DataTemplate>
-                                                                <TextBlock Text="{Binding}" FontSize="16" FontWeight="Normal" />
+                                                                <TextBlock Text="{Binding}" FontSize="16" FontWeight="Normal" local:TextBlockHelper.CopyOnClick="true" />
                                                             </DataTemplate>
                                                         </GridViewColumn.CellTemplate>
                                                     </GridViewColumn>
                                                     <GridViewColumn Header="Name" Width="280">
                                                         <GridViewColumn.CellTemplate>
                                                             <DataTemplate>
-                                                                <TextBlock Text="{Binding Hostname}" FontSize="16" FontWeight="Bold" />
+                                                                <TextBlock Text="{Binding Hostname}" FontSize="16" FontWeight="Bold" local:TextBlockHelper.CopyOnClick="true" />
                                                             </DataTemplate>
                                                         </GridViewColumn.CellTemplate>
                                                     </GridViewColumn>
@@ -281,7 +281,7 @@
                                                         <GridViewColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <StackPanel Orientation="Horizontal">
-                                                                    <TextBlock Text="{Binding MAC, Converter={StaticResource m2s}}" FontSize="16"  />
+                                                                    <TextBlock Text="{Binding MAC, Converter={StaticResource m2s}}" FontSize="16"  local:TextBlockHelper.CopyOnClick="true" />
                                                                 </StackPanel>
                                                             </DataTemplate>
                                                         </GridViewColumn.CellTemplate>
@@ -300,7 +300,7 @@
                                                             </DataTemplate>
                                                         </GridViewColumn.CellTemplate>
                                                     </GridViewColumn>
-                                                    <GridViewColumn Header="Dienste / geöffnete Ports" Width="300">
+                                                    <!--<GridViewColumn Header="Dienste / geöffnete Ports" Width="300">
                                                         <GridViewColumn.CellTemplate>
                                                             <DataTemplate>
                                                                 <ItemsControl ItemsSource="{Binding OpenPorts}">
@@ -319,7 +319,7 @@
                                                                 </ItemsControl>
                                                             </DataTemplate>
                                                         </GridViewColumn.CellTemplate>
-                                                    </GridViewColumn>
+                                                    </GridViewColumn>-->
                                                 </GridView>
                                             </ListView.View>
                                         </ListView>
@@ -341,7 +341,7 @@
                                                 <CheckBox FontSize="24" Content="Starte Scan bei Programmstart" IsChecked="{Binding Config.AutoStart}" />
                                                 <CheckBox FontSize="24" Content="Bei Interface-Wechsel Adressbereich übernehmen" IsChecked="{Binding Config.AutoFillRange}"  />
                                                 <StackPanel Orientation="Horizontal" >
-                                                    <CheckBox FontSize="24" Content="Port-Scan" VerticalAlignment="Center" IsChecked="{Binding Config.PortScan}" />
+                                                    <CheckBox FontSize="24" Content="Port-Scan" VerticalAlignment="Center" IsChecked="{Binding Config.PortScan}" Visibility="Collapsed" />
                                                     <Button FontSize="24" Content="Einstellungen" Margin="5,0,0,0" IsEnabled="False" Visibility="Collapsed" />
                                                 </StackPanel>
 

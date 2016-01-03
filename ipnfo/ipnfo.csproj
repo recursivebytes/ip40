@@ -109,6 +109,7 @@
     <Compile Include="RelayCommand.cs" />
     <Compile Include="StatusToBrushConverter.cs" />
     <Compile Include="StatusToTextConverter.cs" />
+    <Compile Include="TextBlockHelper.cs" />
     <Compile Include="TouchMainWindow.xaml.cs">
       <DependentUpon>TouchMainWindow.xaml</DependentUpon>
     </Compile>

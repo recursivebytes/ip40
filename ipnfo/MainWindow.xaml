@@ -106,10 +106,10 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>       
         <Grid Grid.Row="3">
-            <ListView ItemsSource="{Binding HostsOnline}">
+            <ListView ItemsSource="{Binding HostsOnline}" Name="lv" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn>
+                        <GridViewColumn Header="Status">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -132,7 +132,7 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="Name" Width="180">
+                        <GridViewColumn Header="Hostname" Width="180">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Hostname,FallbackValue={}}" local:TextBlockHelper.CopyOnClick="true" />

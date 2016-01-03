@@ -194,8 +194,12 @@
                                                                     </MultiBinding>
                                                                 </TextBlock.Text>
                                                             </TextBlock>
-                                                            <Button Content="WOL" Grid.Row="2" Command="{Binding WakeOnLanCommand}" Visibility="{Binding CanWOL, Converter={StaticResource b2v}}" Style="{StaticResource MetroFlatButton}" />
-                                                            <Button Content="Port-Scan"  Grid.Row="3" Style="{StaticResource MetroFlatButton}" />
+                                                            <Button Grid.Row="2" Command="{Binding WakeOnLanCommand}" Visibility="{Binding CanWOL, Converter={StaticResource b2v}}" Style="{StaticResource MetroFlatButton}" >
+                                                                <Button.Content>
+                                                                    <Image Source="Icons/box.png" ToolTip="Sende Wake-on-LAN (WOL) Paket" />
+                                                                </Button.Content>
+                                                            </Button>
+                                                            <Button Content="Port-Scan"  Grid.Row="3" Style="{StaticResource MetroFlatButton}" Visibility="Collapsed" />
                                                             <Button Grid.Row="0" Click="Button_Click_3" Style="{StaticResource MetroFlatButton}" >
                                                                 <Button.Content>
                                                                     <Path Data="M0,0 L8,8 M0,8 L8,0" Stretch="Uniform" StrokeThickness="2" Stroke="Black"/>

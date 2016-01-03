@@ -71,14 +71,14 @@ namespace ipnfo
         }
     }
 
-    public enum HostStatus
+    public enum HostStatus : int
     {
-        Unknown,
-        Pending,
-        Online, 
-        Offline,
-        Checking,
-        Disabled
+        Unknown = 6,
+        Pending = 3,
+        Online = 1, 
+        Offline = 4,
+        Checking = 2,
+        Disabled = 5
     }
 
 }

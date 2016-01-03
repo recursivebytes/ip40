@@ -28,7 +28,11 @@
                         <local:BoolToCursorConverter x:Key="b2c" />
                         <local:MACToStringConverter x:Key="m2s" />
                         <local:HostStatusToIconConverter x:Key="hs2i" />
+                    <local:NotNullToVisibilityConverter x:Key="o2v" />
                     <local:TouchWindowContentSelector x:Key="ContentSelector" />
+                    <Style x:Key="portheader" TargetType="{x:Type GridViewColumnHeader}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -106,14 +110,14 @@
                                     <DataTemplate>
                                         <Grid>
                                             <Grid.RowDefinitions>
-                                                <RowDefinition Height="*" />
                                                 <RowDefinition Height="auto" />
+                                                <RowDefinition Height="*" />
                                             </Grid.RowDefinitions>
                                             
                                             
                                            
                                             
-                                            <ItemsControl ItemsSource="{Binding ClassCDummies}" Grid.Row="0">
+                                            <ItemsControl ItemsSource="{Binding ClassCDummies}" Grid.Row="1">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <UniformGrid Columns="16" Rows="16" />
@@ -121,28 +125,111 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border SnapsToDevicePixels="True" Background="{Binding Host.VisibleStatus, Converter={StaticResource s2b}, Mode=OneWay, FallbackValue=LightGray}" Margin="1">
-                                                        <TextBlock FontSize="20" Text="{Binding LastOctett}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-
-                                                    </Border>
+                                                    <Border SnapsToDevicePixels="True" Background="{Binding Host.VisibleStatus, Converter={StaticResource s2b}, Mode=OneWay, FallbackValue=LightGray}" Margin="1" MouseDown="Border_MouseDown">
+                                                            <Grid>
+                                                                <TextBlock FontSize="10" VerticalAlignment="Top" HorizontalAlignment="Right">
+                                                                    <TextBlock.Text>
+                                                                        <MultiBinding Converter="{StaticResource p2t}">
+                                                                            <Binding Path="Host.Ping" />
+                                                                            <Binding Path="Host.Status" />
+                                                                        </MultiBinding>
+                                                                    </TextBlock.Text>
+                                                                </TextBlock>
+                                                                <TextBlock FontSize="20" Text="{Binding LastOctett}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                                <TextBlock FontSize="10" Text="{Binding Host.Hostname}" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+                                                            </Grid>
+                                                        </Border>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
 
-                                            <StackPanel Orientation="Horizontal" Margin="5,5,5,2" HorizontalAlignment="Center" Grid.Row="1">
-                                                <Button Width="32" Command="{Binding PreviousClassCNetworkCommand}" >
+                                            <StackPanel Orientation="Horizontal" Margin="5,5,5,2" HorizontalAlignment="Center" Grid.Row="0" Height="32">
+                                                <Button Width="32" Command="{Binding PreviousClassCNetworkCommand}" Style="{StaticResource MetroFlatButton}">
                                                     <Canvas Width="20" Height="20">
-                                                        <Path Width="20" Height="20"  Stretch="Fill" Fill="Black" Data="F1 M 256,0 L0,128 L256,256 L256,224 L64,128 L256,32  Z "/>
+                                                        <Path Width="10" Height="20"  Stretch="Fill" Fill="Black" Data="F1 M 256,0 L0,128 L256,256 L256,224 L64,128 L256,32  Z "/>
                                                     </Canvas>
 
                                                 </Button>
                                                 <TextBlock HorizontalAlignment="Center" FontSize="16" VerticalAlignment="Center"  FontWeight="Bold" Margin="5,0,5,0" Text="{Binding CurrentClassCNetwork, Mode=OneWay}" ></TextBlock>
-                                                <Button Width="32" Command="{Binding NextClassCNetworkCommand}" >
+                                                <Button Width="32" Command="{Binding NextClassCNetworkCommand}" Style="{StaticResource MetroFlatButton}">
                                                     <Canvas Width="20" Height="20">
-                                                        <Path Width="20" Height="20"  Stretch="Fill" Fill="Black" Data="F1 M 0,0 L0,0 L256,128 L0,256 L0,224 L192,128 L0,32  Z "/>
+                                                        <Path Width="10" Height="20"  Stretch="Fill" Fill="Black" Data="F1 M 0,0 L0,0 L256,128 L0,256 L0,224 L192,128 L0,32  Z "/>
                                                     </Canvas>
                                                 </Button>
                                             </StackPanel>
+
+                                            <Border Visibility="{Binding CurrentSelected, Converter={StaticResource o2v}}" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
+                                                <Border.Effect>
+                                                    <DropShadowEffect Color="Black" BlurRadius="15" ShadowDepth="0" />
+                                                </Border.Effect>
+                                                <Grid Background="White" Grid.RowSpan="2" DataContext="{Binding CurrentSelected}" >
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="30" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="auto" />
+                                                        </Grid.RowDefinitions>
+                                                        
+                                                        <Grid Grid.RowSpan="5" Grid.Column="2">
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="30" />
+                                                                <RowDefinition Height="5" />
+                                                                <RowDefinition Height="30" />
+                                                                <RowDefinition Height="30" />
+                                                            </Grid.RowDefinitions>
+                                                            <TextBlock FontSize="16" Margin="5,0,0,0" Grid.Row="1">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding Converter="{StaticResource p2t}" ConverterParameter="unit">
+                                                                        <Binding Path="Ping" />
+                                                                        <Binding Path="Status" />
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                            <Button Content="WOL" Grid.Row="2" Command="{Binding WakeOnLanCommand}" Visibility="{Binding CanWOL, Converter={StaticResource b2v}}" Style="{StaticResource MetroFlatButton}" />
+                                                            <Button Content="Port-Scan"  Grid.Row="3" Style="{StaticResource MetroFlatButton}" />
+                                                            <Button Grid.Row="0" Click="Button_Click_3" Style="{StaticResource MetroFlatButton}" >
+                                                                <Button.Content>
+                                                                    <Path Data="M0,0 L8,8 M0,8 L8,0" Stretch="Uniform" StrokeThickness="2" Stroke="Black"/>
+                                                                </Button.Content>
+                                                            </Button>
+                                                        </Grid>
+                                                        
+                                                       
+                                                        <Image />
+                                                        <TextBlock  FontSize="24" FontWeight="Bold" Grid.Row="0" Grid.Column="1" Margin="0,0,5,0">
+                                                            <Hyperlink Command="{Binding SMBCommand}">
+                                                                <TextBlock Text="{Binding IP, Converter={StaticResource l2ip},ConverterParameter=LAN}" />
+                                                            </Hyperlink>
+                                                        </TextBlock>                                                       
+                                                        
+                                                        <Image Grid.Row="2" Margin="5,0,0,0"  />
+                                                        <TextBlock Text="{Binding Hostname}" Grid.Row="2" FontSize="24" FontWeight="Bold"  Grid.Column="1" />
+
+                                                        <Image Grid.Row="3" Margin="5,0,0,0"  />
+                                                        <TextBlock Text="{Binding MAC, Converter={StaticResource m2s}}" FontSize="24" FontWeight="Bold" Grid.Row="3" Grid.Column="1" Margin="0,0,5,0" />
+                                                       
+                                                        <ListView Grid.Row="4" MinHeight="0" Grid.ColumnSpan="3" MaxHeight="300" ItemsSource="{Binding OpenPorts}">
+                                                            <ListView.View>
+                                                                <GridView ColumnHeaderContainerStyle="{StaticResource portheader}" >
+                                                                    <GridViewColumn DisplayMemberBinding="{Binding Name}" />
+                                                                    <GridViewColumn DisplayMemberBinding="{Binding Description}" />
+                                                                </GridView>
+                                                            </ListView.View>
+                                                        </ListView>
+
+                                                    </Grid>
+                                                    
+                                            </Grid>
+                                            </Border>
                                         </Grid>
                                     </DataTemplate>                                   
                                 </Setter.Value>

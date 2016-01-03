@@ -36,6 +36,12 @@ namespace ipnfo
             set { Set("View", value); OnPropertyChanged("View"); }
         }
 
+        public HostInformation CurrentSelected
+        {
+            get { return Get<HostInformation>("CurrentSelected"); }
+            set { Set("CurrentSelected", value); OnPropertyChanged("CurrentSelected"); }
+        }
+
 
         public new void FireAllPropertiesChanged()
         {
@@ -87,6 +93,8 @@ namespace ipnfo
                 //ClassCDummies[i].FireVisibleStatusUpdate();
 
             }
+
+            
 
             OnPropertyChanged("ClassCDummies");
         }
@@ -223,6 +231,8 @@ namespace ipnfo
             if (Config.AutoStart)
                 if (StartStopCommand.CanExecute(null))
                     StartStopCommand.Execute(null);
+
+
         }
 
         public override object Clone()
@@ -501,8 +511,10 @@ namespace ipnfo
                 if (f != null)
                     f.MAC = d.Value;
                 else
-                    Hosts.Add(new HostInformation(d.Key.ToLong()) { MAC = d.Value });
-
+                {
+                    f = new HostInformation(d.Key.ToLong()) { MAC = d.Value };
+                    Hosts.Add(f);
+                }
                 if (!Config.RecentHosts.Any(a => a.MAC.ToString() == f.MAC.ToString()))
                     Config.RecentHosts.Add(f);
             }

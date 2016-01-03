@@ -1,6 +1,7 @@
 ﻿using csutils.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -150,6 +151,31 @@ namespace ipnfo
             WakeOnLan(MAC.GetAddressBytes());
             Task.Run(() => { CheckWOL(); });
         }
+
+        private ICommand cmdSMB;
+        /// <summary>
+        /// SMB Command
+        /// </summary>
+        public ICommand SMBCommand
+        {
+            get
+            {
+                if (cmdSMB == null)
+                    cmdSMB = new RelayCommand(p => OnSMB(p), p => CanSMB());
+                return cmdSMB;
+            }
+        }
+
+        private bool CanSMB()
+        {
+            return true;
+        }
+
+        private void OnSMB(object parameter)
+        {
+            Process.Start("explorer.exe", @"\\"+IP.ToIP().ToString());
+        }
+	
 	
 
         public override object Clone()

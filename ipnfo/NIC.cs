@@ -34,7 +34,7 @@ namespace ipnfo
                             DNS = dns.ToString();
 
                         IP = ip.Address.ToString();
-                        Console.WriteLine(ip.Address.ToString());
+                        //Console.WriteLine(ip.Address.ToString());
                     }
                 }
             }

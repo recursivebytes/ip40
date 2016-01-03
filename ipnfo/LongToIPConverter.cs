@@ -16,7 +16,17 @@ namespace ipnfo
             try
             {
                 long l = (long)value;
-                return l.ToIP().ToString();
+                string p = parameter == null ? "" : parameter.ToString();
+
+                switch(p.ToLower())
+                {
+                    case "lan":
+                        return "\\\\"+l.ToIP().ToString();
+                    case "url":
+                        return "http://" + l.ToIP().ToString();
+                    default:
+                        return l.ToIP().ToString();
+                }              
             }
             catch
             {

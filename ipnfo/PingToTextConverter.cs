@@ -15,9 +15,15 @@ namespace ipnfo
             if (values[1] == DependencyProperty.UnsetValue || ((HostStatus)values[1]) != HostStatus.Online)
                 return "";
 
+            parameter = parameter == null ? "" : parameter;
+
+
             if (values[0].ToString() == "0" || values[0].ToString() == "")
-                return "<1";
-            return values[0].ToString();
+                return "<1" + (parameter.ToString().ToLower()=="unit" ? "ms" :"");
+
+
+
+            return values[0].ToString() + (parameter.ToString().ToLower() == "unit" ? "ms" : "");
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)

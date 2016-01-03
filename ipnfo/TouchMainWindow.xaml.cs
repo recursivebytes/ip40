@@ -59,6 +59,27 @@ namespace ipnfo
                 ((MainViewModel)DataContext).Config.Save();
         }
 
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            ((MainViewModel)DataContext).CurrentSelected = null;
+        }
+
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            HostDummy hd = ((FrameworkElement)sender).DataContext as HostDummy;
+            if(hd!=null)
+            {
+                
+                if(hd.Host==null)
+                {
+
+                    ((MainViewModel)DataContext).CurrentSelected = new HostInformation(((MainViewModel)DataContext).CurrentClassCNetwork.ToLong() + hd.LastOctettInt);
+                }
+                else
+                    ((MainViewModel)DataContext).CurrentSelected = hd.Host;
+            }
+        }
+
 
     }
 

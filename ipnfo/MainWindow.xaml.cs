@@ -166,7 +166,27 @@ namespace ipnfo
         }
 
 
-
+        public void CopyText(object sender, RoutedEventArgs args)
+        {
+            try
+            {
+                MenuItem m = sender as MenuItem;
+                if (m != null)
+                {
+                    HostInformation hi = ((HostDummy)m.DataContext).Host;
+                    if (hi != null)
+                    {
+                        if (m.Name == "ip")
+                            Clipboard.SetText(hi.ToString());
+                        else if (m.Name == "mac")
+                            Clipboard.SetText(hi.MAC.ToFormattedMAC());
+                        else if (m.Name == "host")
+                            Clipboard.SetText(hi.Hostname);
+                    }
+                }
+            }
+            catch { }
+        }
 
 
 

@@ -340,6 +340,10 @@
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <StackPanel HorizontalAlignment="Center" Margin="0,50,0,0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Adapter:" FontSize="24" />
+                                                    <ComboBox  IsEnabled="{Binding IsAnalyzing, Converter={StaticResource ib}}" SelectedIndex="0" ItemsSource="{Binding NICs}" Width="150" SelectedItem="{Binding CurrentNIC, Mode=OneWayToSource}" SelectionChanged="ComboBox_SelectionChanged" />
+                                                </StackPanel>
                                                 <CheckBox FontSize="24" Content="Zeige Klasse-C-Netz Ansicht" IsChecked="{Binding Config.ShowClassCView}" Name="showccn" />
                                                 <CheckBox FontSize="24" Content="Zeige Netzwerkinformationen" IsChecked="{Binding Config.ShowSystemInformation}" Name="showgeneral" />
                                                 <CheckBox FontSize="24" Content="Starte Scan bei Programmstart" IsChecked="{Binding Config.AutoStart}" />

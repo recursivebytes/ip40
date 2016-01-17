@@ -481,6 +481,11 @@ namespace ipnfo
 
             UpdateClassCDummies();
 
+            if (Config.CheckInternet && CurrentNIC != null)
+            {
+                await CheckConnectivity();
+            }
+
             int hostcount = Hosts.Where(w => w.Pending).Count();
             int current = 0;
             int check = 1;
@@ -519,10 +524,7 @@ namespace ipnfo
                     Config.RecentHosts.Add(f);
             }
 
-            if (Config.CheckInternet && CurrentNIC != null)
-            {
-                await CheckConnectivity();
-            }
+            
 
             foreach (var h in Hosts)
                 h.Pending = false;
@@ -537,7 +539,7 @@ namespace ipnfo
             try
             {
                 Ping p = new Ping();
-                PingReply pr = await p.SendPingAsync("8.8.8.8", Config.PingTimeout);
+                PingReply pr = p.Send(new IPAddress(new byte[] { 8, 8, 8, 8 }), 2000);
                 GoogleDNSStatus = pr.Status == IPStatus.Success ? HostStatus.Online : HostStatus.Offline;
             }
             catch
@@ -548,7 +550,7 @@ namespace ipnfo
             try
             {
                 Ping p2 = new Ping();
-                PingReply pr2 = await p2.SendPingAsync(CurrentNIC.Gateway, Config.PingTimeout);
+                PingReply pr2 = await p2.SendPingAsync(CurrentNIC.Gateway,2000);
                 var entry = Dns.GetHostEntry("example.com");
                 GatewayStatus = entry.AddressList.Length>0 && pr2.Status == IPStatus.Success ? HostStatus.Online : HostStatus.Offline;
             }
@@ -560,7 +562,7 @@ namespace ipnfo
             try
             {
                 Ping p3 = new Ping();
-                PingReply pr3 = await p3.SendPingAsync(CurrentNIC.DNS, Config.PingTimeout);
+                PingReply pr3 = await p3.SendPingAsync(CurrentNIC.DNS, 2000);
                 DNSStatus = pr3.Status == IPStatus.Success ? HostStatus.Online : HostStatus.Offline;
             }
             catch
@@ -570,7 +572,7 @@ namespace ipnfo
             try
             {
                 Ping p4 = new Ping();
-                PingReply pr4 = await p4.SendPingAsync("google.de", Config.PingTimeout);
+                PingReply pr4 = await p4.SendPingAsync("google.de",2000);
                 InternetStatus = pr4.Status == IPStatus.Success && DNSStatus == HostStatus.Online ? HostStatus.Online : HostStatus.Offline;
             }
             catch

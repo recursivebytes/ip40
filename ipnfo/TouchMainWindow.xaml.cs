@@ -82,7 +82,10 @@ namespace ipnfo
         }
 
 
-        
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ((MainViewModel)DataContext).FillRange();
+        }
 
     }
 

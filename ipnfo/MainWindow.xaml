@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:ipnfo" Closing="Window_Closing" 
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" Loaded="Window_Loaded"
-        Title="IP46" Height="800" Width="700">
+        Title="IP40" Height="800" Width="700">
     <Grid>
         <Grid.Resources>
             <BooleanToVisibilityConverter x:Key="b2v" />
@@ -100,7 +100,22 @@
                 <DataTemplate>
                     <Border Background="{Binding Host.VisibleStatus, Converter={StaticResource s2b}, Mode=OneWay, FallbackValue=LightGray}" Margin="1">
                         <TextBlock Text="{Binding LastOctett, FallbackValue=.254}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        
+                        <Border.ContextMenu>
+                            <ContextMenu>                                
+                                <MenuItem Header="Kopiere IP" Click="CopyText" Name="ip" />
+                                <MenuItem Header="Kopiere MAC-Adresse" Click="CopyText" Name="mac" />
+                                <MenuItem Header="Kopiere Hostname" Click="CopyText" Name="host" />
+                                <Separator />
+                                <MenuItem Header="Sende WOL-Paket" Command="{Binding Host.WakeOnLanCommand}">
+                                    <MenuItem.Icon>
+                                        <Image Source="Icons/box.png" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Öffne in Explorer" Command="{Binding Host.SMBCommand}">
+                                    
+                                </MenuItem>
+                            </ContextMenu>
+                        </Border.ContextMenu>
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

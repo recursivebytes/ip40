@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -85,6 +86,24 @@ namespace ipnfo
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ((MainViewModel)DataContext).FillRange();
+        }
+
+        private void version_Loaded(object sender, RoutedEventArgs e)
+        {
+            TextBlock b = sender as TextBlock;
+            if(b!=null)
+            {
+                b.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString(2);
+            }
+        }
+
+        private void date_Loaded(object sender, RoutedEventArgs e)
+        {
+            TextBlock b = sender as TextBlock;
+            if (b != null)
+            {
+                b.Text = About.RetrieveLinkerTimestamp().ToString("dd.MM.yyyy");
+            }
         }
 
     }

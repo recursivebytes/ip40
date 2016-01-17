@@ -1,14 +1,14 @@
 ﻿<Window x:Class="ipnfo.About"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" WindowStyle="ToolWindow" ResizeMode="NoResize"
-        Title="Über IP46" Height="300" Width="360">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" WindowStyle="ToolWindow" ResizeMode="NoResize" Loaded="Window_Loaded"
+        Title="Über IP46" Height="360" Width="360">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
         <StackPanel>
-            <TextBlock Text="IP46" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10" />
+            <Image Source="Icons/logo.png" Width="128" Height="128" />
             <Grid HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" MinWidth="100" />
@@ -23,19 +23,18 @@
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <TextBlock Text="Version:" />
-                <TextBlock Text="1.1" Grid.Column="1" />
+                <TextBlock Grid.Column="1" Name="version" />
                 <TextBlock Text="Datum:" Grid.Row="1" />
-                <TextBlock Text="27.07.2015" Grid.Column="1" Grid.Row="1" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Name="date" />
                 <TextBlock Text="Entwickler:" Grid.Row="2" />
-                <TextBlock Text="Stefan Tobert" Grid.Column="1" Grid.Row="2" />
+                <TextBlock Grid.Column="1" Grid.Row="2">
+                    <Hyperlink TargetName="http://ip40.recursivebytes.com" Click="Hyperlink_Click">Stefan Tobert</Hyperlink>
+                </TextBlock>
                 <TextBlock Text="Lizenz:" Grid.Row="3" />
                 <TextBlock Grid.Column="1" Grid.Row="3">
                     <Hyperlink TargetName="http://opensource.org/licenses/MIT" Click="Hyperlink_Click">MIT</Hyperlink> 
                 </TextBlock>
-                <TextBlock Text="Projektseite:" Grid.Row="4" />
-                <TextBlock Grid.Column="1" Grid.Row="4">
-                    <Hyperlink TargetName="http://ip46.codeplex.com" Click="Hyperlink_Click">http://ip46.codeplex.com</Hyperlink>
-                </TextBlock>
+               
             </Grid>
             <TextBlock Text="Vielen Dank an:" Margin="5,40,0,10" />
             <StackPanel Margin="5">
@@ -46,10 +45,6 @@
                         <Hyperlink TargetName="http://p.yusukekamiyamane.com/" Click="Hyperlink_Click">http://p.yusukekamiyamane.com</Hyperlink>
                     </TextBlock>
                 </StackPanel>
-                <!--<StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Xceed" FontWeight="Bold" />
-                    <TextBlock Text=" (Steuerelemente)" />
-                </StackPanel>-->
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Mark James" FontWeight="Bold" />
                     <TextBlock Text=" (Icons), " />

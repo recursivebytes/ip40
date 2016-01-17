@@ -1,0 +1,70 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style TargetType="Ellipse" x:Key="online">
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="10" Color="DarkGreen" Direction="0" ShadowDepth="0" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Fill">
+            <Setter.Value>
+                <RadialGradientBrush GradientOrigin="0.25,0.25" >
+                    <GradientStop Color="Green" Offset="1" />
+                    <GradientStop Color="LightGreen" />
+                </RadialGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Ellipse" x:Key="offline">
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="10" Color="DarkRed" Direction="0" ShadowDepth="0" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Fill">
+            <Setter.Value>
+                <RadialGradientBrush GradientOrigin="0.25,0.25" >
+                    <GradientStop Color="Firebrick" Offset="1" />
+                    <GradientStop Color="Salmon" />
+                </RadialGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Ellipse" x:Key="busy">
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="10" Color="Goldenrod" Direction="0" ShadowDepth="0" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Fill">
+            <Setter.Value>
+                <RadialGradientBrush GradientOrigin="0.25,0.25" >
+                    <GradientStop Color="Gold" Offset="1" />
+                    <GradientStop Color="Yellow" />
+                </RadialGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Ellipse" x:Key="unknown">
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="5" Color="DarkGray" Direction="0" ShadowDepth="0" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Fill">
+            <Setter.Value>
+                <RadialGradientBrush GradientOrigin="0.25,0.25" >
+                    <GradientStop Color="Gray" Offset="1" />
+                    <GradientStop Color="LightGray" />
+                </RadialGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

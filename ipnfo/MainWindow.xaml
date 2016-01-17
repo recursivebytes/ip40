@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:ipnfo" Closing="Window_Closing" 
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" Loaded="Window_Loaded"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" Loaded="Window_Loaded" Icon="Icons/logo.png"
         Title="IP40" Height="800" Width="700">
     <Grid>
         <Grid.Resources>
@@ -106,11 +106,7 @@
                                 <MenuItem Header="Kopiere MAC-Adresse" Click="CopyText" Name="mac" />
                                 <MenuItem Header="Kopiere Hostname" Click="CopyText" Name="host" />
                                 <Separator />
-                                <MenuItem Header="Sende WOL-Paket" Command="{Binding Host.WakeOnLanCommand}">
-                                    <MenuItem.Icon>
-                                        <Image Source="Icons/box.png" />
-                                    </MenuItem.Icon>
-                                </MenuItem>
+                                <MenuItem Header="Sende WOL-Paket" Command="{Binding Host.WakeOnLanCommand}" />
                                 <MenuItem Header="Öffne in Explorer" Command="{Binding Host.SMBCommand}">
                                     
                                 </MenuItem>
@@ -128,11 +124,21 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding VisibleStatus,Converter={StaticResource hs2i}}" Width="16" Height="16" />
-                                    <Button Visibility="{Binding CanWOL,Converter={StaticResource b2v}}" Command="{Binding WakeOnLanCommand}">
+                                    <Ellipse Width="12" Height="12" Style="{Binding VisibleStatus,Converter={StaticResource hs2i}}" />
+                                    <Button Visibility="{Binding CanWOL,Converter={StaticResource b2v}}" Command="{Binding WakeOnLanCommand}" Height="24" Width="24">
                                         <Button.Template>
                                                 <ControlTemplate>
-                                                    <Image Source="Icons/box.png" Width="16" Height="16" ToolTip="Sende Wake-on-LAN (WOL) Paket" />
+                                                    <Path Data="M20,10 A25,25 180 1 0 42,10 L42,20 A16,17 180 1 1 20,20  M27,5 L27,35 L35,35 L35,5" Stretch="Uniform" Margin="4">
+                                                        <Path.Fill>
+                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                <GradientStop Color="LightGreen" />
+                                                                <GradientStop Color="Green" Offset="1" />
+                                                            </LinearGradientBrush>
+                                                        </Path.Fill>
+                                                        <Path.Effect>
+                                                            <DropShadowEffect ShadowDepth="0" BlurRadius="3" Color="DarkGreen" />
+                                                        </Path.Effect>
+                                                    </Path>
                                                 </ControlTemplate>
                                             </Button.Template>
                                     </Button>
@@ -256,7 +262,6 @@
                             <Button Grid.Column="0" Margin="10,2,2,2" ToolTip="Über IP46" Click="Button_Click">
                                 <Button.Content>
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="Icons/information.png" />
                                         <TextBlock Text="Über..." />
                                     </StackPanel>
                                 </Button.Content>

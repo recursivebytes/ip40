@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -11,25 +12,23 @@ namespace ipnfo
 {
     public class HostStatusToIconConverter : IValueConverter
     {
-        static ImageSource unknown = new BitmapImage(new Uri("pack://application:,,,/Icons/status_unknown.png"));
-        static ImageSource online = new BitmapImage(new Uri("pack://application:,,,/Icons/status.png"));
-        static ImageSource checking = new BitmapImage(new Uri("pack://application:,,,/Icons/status-away.png"));
-        static ImageSource offline = new BitmapImage(new Uri("pack://application:,,,/Icons/status-busy.png"));
-
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            Uri resourceLocater = new Uri("/ip40;component/IconResources.xaml", System.UriKind.Relative);
+            ResourceDictionary resourceDictionary = (ResourceDictionary)Application.LoadComponent(resourceLocater);
             HostStatus hs = (HostStatus)value;
-            switch(hs)
+            switch (hs)
             {
                 case HostStatus.Offline:
-                    return offline;
+                    return resourceDictionary["offline"] as Style;
                 case HostStatus.Online:
-                    return online;
+                    return resourceDictionary["online"] as Style;
                 case HostStatus.Checking:
-                    return checking;
+                    return resourceDictionary["busy"] as Style;
                 default:
-                    return unknown;
-            }
+                    return resourceDictionary["unknown"] as Style;
+            }   
+            
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

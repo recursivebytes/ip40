@@ -3,7 +3,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" Closing="MetroWindow_Closing"
-        xmlns:local="clr-namespace:ipnfo" Icon="Icons/logo.png" 
+        xmlns:local="clr-namespace:ipnfo" Icon="Icons/logo2.png" 
         Title="IP40" Height="800" Width="900" MinWidth="700" MinHeight="700">
     <mm:MetroWindow.Resources>        
         <ResourceDictionary>
@@ -187,6 +187,7 @@
                                                                 <RowDefinition Height="5" />
                                                                 <RowDefinition Height="30" />
                                                                 <RowDefinition Height="30" />
+                                                                
                                                             </Grid.RowDefinitions>
                                                             <TextBlock FontSize="16" Margin="5,0,0,0" Grid.Row="1">
                                                                 <TextBlock.Text>
@@ -196,7 +197,16 @@
                                                                     </MultiBinding>
                                                                 </TextBlock.Text>
                                                             </TextBlock>
-                                                            <Button Grid.Row="2" Command="{Binding WakeOnLanCommand}" ToolTip="Sende Wake-On-LAN Paket" Visibility="{Binding CanWOL, Converter={StaticResource b2v}}"  >
+                                                            <Button Grid.Row="2" Command="{Binding ScanIPCommand}" ToolTip="Checke Status"  >
+                                                                <Button.Content>
+                                                                    <Path Width="18" Height="18"  Stretch="Uniform" Fill="Red" Data="F1 M 42.5,22C 49.4036,22 55,27.5964 55,34.5C 55,41.4036 49.4036,47 42.5,47C 40.1356,47 37.9245,46.3435 36,45.2426L 26.9749,54.2678C 25.8033,55.4393 23.9038,55.4393 22.7322,54.2678C 21.5607,53.0962 21.5607,51.1967 22.7322,50.0251L 31.7971,40.961C 30.6565,39.0755 30,36.8644 30,34.5C 30,27.5964 35.5964,22 42.5,22 Z M 42.5,26C 37.8056,26 34,29.8056 34,34.5C 34,39.1944 37.8056,43 42.5,43C 47.1944,43 51,39.1944 51,34.5C 51,29.8056 47.1944,26 42.5,26 Z ">
+                                                                       <Path.Effect>
+                                                                            <DropShadowEffect ShadowDepth="0" BlurRadius="3" Color="DarkRed" />
+                                                                        </Path.Effect>
+                                                                    </Path>
+                                                                </Button.Content>
+                                                            </Button>
+                                                            <Button Grid.Row="3" Command="{Binding WakeOnLanCommand}" ToolTip="Sende Wake-On-LAN Paket" Visibility="{Binding CanWOL, Converter={StaticResource b2v}}"  >
                                                                 <Button.Content>
                                                                     <Path Data="M20,10 A25,25 180 1 0 42,10 L42,20 A16,17 180 1 1 20,20  M27,5 L27,35 L35,35 L35,5" Stretch="Uniform" >
                                                                         <Path.Fill>
@@ -211,7 +221,8 @@
                                                                     </Path>
                                                                 </Button.Content>
                                                             </Button>
-                                                            <Button Content="Port-Scan"  Grid.Row="3" Style="{StaticResource MetroFlatButton}" Visibility="Collapsed" />
+                                                           
+                                                            <Button Content="Port-Scan"  Grid.Row="4" Style="{StaticResource MetroFlatButton}" Visibility="Collapsed" />
                                                             <Button Grid.Row="0" Click="Button_Click_3" Style="{StaticResource MetroFlatButton}" >
                                                                 <Button.Content>
                                                                     <Path Data="M0,0 L8,8 M0,8 L8,0" Stretch="Uniform" StrokeThickness="2" Stroke="Black"/>
@@ -222,16 +233,16 @@
                                                        
                                                         <Image />
                                                         <TextBlock  FontSize="24" FontWeight="Bold" Grid.Row="0" Grid.Column="1" Margin="0,0,5,0">
-                                                            <Hyperlink Command="{Binding SMBCommand}">
-                                                                <TextBlock Text="{Binding IP, Converter={StaticResource l2ip},ConverterParameter=LAN}" />
-                                                            </Hyperlink>
+                                                            <!--<Hyperlink Command="{Binding SMBCommand}">-->
+                                                                <TextBlock Text="{Binding IP, Converter={StaticResource l2ip}}" />
+                                                            <!--</Hyperlink>-->
                                                         </TextBlock>                                                       
                                                         
                                                         <Image Grid.Row="2" Margin="5,0,0,0"  />
-                                                        <TextBlock Text="{Binding Hostname}"  local:TextBlockHelper.CopyOnClick="true" Grid.Row="2" FontSize="24" FontWeight="Bold"  Grid.Column="1" />
+                                                        <TextBlock Text="{Binding Hostname}"  local:TextBlockHelper.CopyOnClick="true" Grid.Row="2" Margin="0,0,20,0" FontSize="24" FontWeight="Bold"  Grid.Column="1" />
 
                                                         <Image Grid.Row="3" Margin="5,0,0,0"  />
-                                                        <TextBlock Text="{Binding MAC, Converter={StaticResource m2s}}" FontSize="24" local:TextBlockHelper.CopyOnClick="true" FontWeight="Bold" Grid.Row="3" Grid.Column="1" Margin="0,0,5,0" />
+                                                        <TextBlock Text="{Binding MAC, Converter={StaticResource m2s}}" FontSize="24" local:TextBlockHelper.CopyOnClick="true" FontWeight="Bold" Grid.Row="3" Grid.Column="1" Margin="0,0,20,0" />
                                                        
                                                         <ListView Grid.Row="4" MinHeight="0" Grid.ColumnSpan="3" MaxHeight="300" ItemsSource="{Binding OpenPorts}" Visibility="Collapsed">
                                                             <ListView.View>
@@ -246,6 +257,11 @@
                                                     
                                             </Grid>
                                             </Border>
+                                            
+                                            
+                                            
+                                            
+                                            
                                         </Grid>
                                     </DataTemplate>                                   
                                 </Setter.Value>
@@ -462,7 +478,7 @@
                                                                 <TextBlock Grid.Column="1" Grid.Row="1" Name="date" Loaded="date_Loaded" />
                                                                 <TextBlock Text="Entwickler:" Grid.Row="2" />
                                                                 <TextBlock Grid.Column="1" Grid.Row="2">
-                    <Hyperlink TargetName="http://ip40.recursivebytes.com" Click="Hyperlink_Click">Stefan Tobert</Hyperlink>
+                    <Hyperlink TargetName="http://ip40.recursivebytes.com" Click="Hyperlink_Click">Stefan T.</Hyperlink>
                                                                 </TextBlock>
                                                                 <TextBlock Text="Lizenz:" Grid.Row="3" />
                                                                 <TextBlock Grid.Column="1" Grid.Row="3">

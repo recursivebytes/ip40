@@ -280,7 +280,7 @@ namespace ipnfo
         public bool IsAnalyzing
         {
             get { return Get<bool>("IsAnalyzing"); }
-            set { Set("IsAnalyzing", value); OnPropertyChanged("IsAnalyzing"); OnPropertyChanged("StartStopButtonText"); }
+            set { Set("IsAnalyzing", value); OnPropertyChanged("IsAnalyzing"); OnPropertyChanged("ScanIPCommand"); OnPropertyChanged("StartStopButtonText"); }
         }
 
 
@@ -404,6 +404,9 @@ namespace ipnfo
                     Task.Run(() => { ScanARP(); });
             }
         }
+
+
+        
 
 
         Regex nicnameRegex = new Regex(@"(Pseudo|Tunneling)", RegexOptions.Compiled);

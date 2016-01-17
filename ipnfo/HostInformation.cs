@@ -149,7 +149,7 @@ namespace ipnfo
         private void OnWakeOnLan(object parameter)
         {
             WakeOnLan(MAC.GetAddressBytes());
-            Task.Run(() => { CheckWOL(); });
+            Task.Run(() => { CheckStatus(1000,10); });
         }
 
         private ICommand cmdSMB;
@@ -175,6 +175,32 @@ namespace ipnfo
         {
             Process.Start("explorer.exe", @"\\"+IP.ToIP().ToString());
         }
+
+
+        private ICommand cmdScanIP;
+        /// <summary>
+        /// ScanIP Command
+        /// </summary>
+        public ICommand ScanIPCommand
+        {
+            get
+            {
+                if (cmdScanIP == null)
+                    cmdScanIP = new RelayCommand(p => OnScanIP(p), p => CanScanIP());
+                return cmdScanIP;
+            }
+        }
+
+        bool canscan = true;
+        private bool CanScanIP()
+        {
+            return Status != HostStatus.Checking;
+        }
+
+        private void OnScanIP(object parameter)
+        {            
+            Task.Run(() => { CheckStatus(0,1); });
+        }
 	
 	
 
@@ -183,13 +209,14 @@ namespace ipnfo
             throw new NotImplementedException();
         }
 
-        private async void CheckWOL()
+        private async void CheckStatus(int delay, int rounds)
         {
             Status = HostStatus.Checking;
 
-            for(int i=0; i<10; i++)
+            for(int i=0; i<rounds; i++)
             {
-                await Task.Delay(1000);
+                if(delay>0)
+                    await Task.Delay(delay);
 
                 HostInformation hi = await MainViewModel.CheckHost(this, null, 1000, false, HostStatus.Checking);
                 if(hi.Status == HostStatus.Online)

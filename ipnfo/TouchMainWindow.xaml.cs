@@ -79,6 +79,8 @@ namespace ipnfo
                 }
                 else
                     ((MainViewModel)DataContext).CurrentSelected = hd.Host;
+
+                ((MainViewModel)DataContext).CurrentSelected.ScanIPCommand.Execute(null);
             }
         }
 

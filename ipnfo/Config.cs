@@ -10,98 +10,149 @@ using System.Xml.Serialization;
 
 namespace ipnfo
 {
+    /// <summary>
+    /// Configuration class for 
+    /// </summary>
     public class Config : Base
     {
+        /// <summary>
+        /// Path to the Configfile (without filename)
+        /// </summary>
         public static readonly string PATH = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\ip46\\";
+        /// <summary>
+        /// Config file name only
+        /// </summary>
         public static readonly string FILE = "config.xml";
 
+        /// <summary>
+        /// If true, the IP Address Range of a changed Ethernet Adapter will be automatically filled into the textboxes
+        /// </summary>
         public bool AutoFillRange
         {
             get { return Get<bool>("AutoFillRange"); }
             set { Set("AutoFillRange", value); OnPropertyChanged("AutoFillRange"); }
         }
 
+        /// <summary>
+        /// if true, the Class C Grid will be shown. Classic View only, in TouchWindow always available.
+        /// </summary>
         public bool ShowClassCView
         {
             get { return Get<bool>("ShowClassCView"); }
             set { Set("ShowClassCView", value); OnPropertyChanged("ShowClassCView"); }
         }
 
+        /// <summary>
+        /// If true, display Information about the Ethernetadapter and Internet. Classic View only.
+        /// </summary>
         public bool ShowSystemInformation
         {
             get { return Get<bool>("ShowSystemInformation"); }
             set { Set("ShowSystemInformation", value); OnPropertyChanged("ShowSystemInformation"); }
         }
 
-
+        /// <summary>
+        /// Timeout for a Ping Request for scans
+        /// </summary>
         public int PingTimeout
         {
             get { return Get<int>("PingTimeout"); }
             set { Set("PingTimeout", value); OnPropertyChanged("PingTimeout"); }
         }
 
-
+        /// <summary>
+        /// Auto-scrolls the Class C Grid to the next Page if needed while scanning
+        /// </summary>
         public bool AutoScroll
         {
             get { return Get<bool>("AutoScroll"); }
             set { Set("AutoScroll", value); OnPropertyChanged("AutoScroll"); }
         }
 
+        /// <summary>
+        /// If true, Internet Connection will be checked as well
+        /// </summary>
         public bool CheckInternet
         {
             get { return Get<bool>("CheckInternet"); }
             set { Set("CheckInternet", value); OnPropertyChanged("CheckInternet"); }
         }
 
+        /// <summary>
+        /// Maximum Number of parallel Pings
+        /// </summary>
         public int MaxParallelConnections
         {
             get { return Get<int>("MaxParallelConnections"); }
             set { Set("MaxParallelConnections", value); OnPropertyChanged("MaxParallelConnections"); }
         }
 
+        /// <summary>
+        /// If true, the Default Ethernet Adapter will be scanned at startup
+        /// </summary>
         public bool AutoStart
         {
             get { return Get<bool>("AutoStart"); }
             set { Set("AutoStart", value); OnPropertyChanged("AutoStart"); }
         }
 
+        /// <summary>
+        /// If true, Ports will be checked in the scanning process
+        /// </summary>
         public bool PortScan
         {
             get { return Get<bool>("PortScan"); }
             set { Set("PortScan", value); OnPropertyChanged("PortScan"); }
         }
 
+        /// <summary>
+        /// Start IP of Scan Range 
+        /// </summary>
         public long IPRangeStart
         {
             get { return Get<long>("IPRangeStart"); }
             set { Set("IPRangeStart", value); OnPropertyChanged("IPRangeStart");  }
         }
 
+        /// <summary>
+        /// End IP of Scan Range
+        /// </summary>
         public long IPRangeEnd
         {
             get { return Get<long>("IPRangeEnd"); }
             set { Set("IPRangeEnd", value); OnPropertyChanged("IPRangeEnd");  }
         }
 
+        /// <summary>
+        /// If true ICMP will be used to check Host status
+        /// </summary>
         public bool UseICMP
         {
             get { return Get<bool>("UseICMP"); }
             set { Set("UseICMP", value); OnPropertyChanged("UseICMP"); }
         }
 
+        /// <summary>
+        /// Known Hosts
+        /// </summary>
         public List<HostInformation> RecentHosts
         {
             get { return Get<List<HostInformation>>("RecentHosts"); }
             set { Set("RecentHosts", value); OnPropertyChanged("RecentHosts"); }
         }
 
+        /// <summary>
+        /// Type of View. Changes need a restart to take effect
+        /// </summary>
         public GUIType GUIType
         {
             get { return Get<GUIType>("GUIType"); }
             set { Set("GUIType", value); OnPropertyChanged("GUIType"); }
         }
 
-
+        /// <summary>
+        /// Constructor. Fills in default values
+        /// </summary>
         public Config()
         {
             AutoScroll = true;
@@ -147,6 +198,9 @@ namespace ipnfo
 
         }
 
+        /// <summary>
+        /// Saves the config file. Always deletes and overrides existing file
+        /// </summary>
         public void Save()
         {
             if (!Directory.Exists(PATH))
@@ -161,6 +215,9 @@ namespace ipnfo
             }            
         }
 
+        /// <summary>
+        /// List of Hosts in this Session. Will not be saved
+        /// </summary>
         [XmlIgnore]
         public List<PortInformation> PortInformation
         {
@@ -168,22 +225,37 @@ namespace ipnfo
             set { Set("PortInformation", value); OnPropertyChanged("PortInformation"); }
         }
 
+        /// <summary>
+        /// Loads the config out of it's file if available. If not or error new Instance with default values will be returned. Returns always a valid config
+        /// </summary>
+        /// <returns></returns>
         public static Config Load()
         {
             Config c  = new Config();
 
-            if (File.Exists(PATH + FILE))
+            try
             {
-                XmlSerializer s = new XmlSerializer(typeof(Config));
-                using (StreamReader sr = new StreamReader(File.OpenRead(PATH + FILE)))
+                if (File.Exists(PATH + FILE))
                 {
-                    c = (Config)s.Deserialize(sr);
+                    XmlSerializer s = new XmlSerializer(typeof(Config));
+                    using (StreamReader sr = new StreamReader(File.OpenRead(PATH + FILE)))
+                    {
+                        c = (Config)s.Deserialize(sr);
+                    }
                 }
+            }
+            catch
+            {
+
             }
 
             return c;
         }
 
+        /// <summary>
+        /// not implemented
+        /// </summary>
+        /// <returns></returns>
         public override object Clone()
         {
             throw new NotImplementedException();

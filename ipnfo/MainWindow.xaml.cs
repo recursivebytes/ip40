@@ -22,10 +22,13 @@ using System.Windows.Shapes;
 namespace ipnfo
 {
     /// <summary>
-    /// Interaktionslogik für MainWindow.xaml
+    /// Classic View
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// Creates the View
+        /// </summary>
         public MainWindow()
         {
 
@@ -165,7 +168,11 @@ namespace ipnfo
             ((MainViewModel)DataContext).FireAllPropertiesChanged();
         }
 
-
+        /// <summary>
+        /// ClickHandler for the Copy-MenuItems. Copies Information to the clipboard
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         public void CopyText(object sender, RoutedEventArgs args)
         {
             try

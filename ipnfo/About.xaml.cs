@@ -17,10 +17,13 @@ using System.Windows.Shapes;
 namespace ipnfo
 {
     /// <summary>
-    /// Interaktionslogik für About.xaml
+    /// AboutBox of the classic view
     /// </summary>
     public partial class About : Window
     {
+        /// <summary>
+        /// Creates new Box
+        /// </summary>
         public About()
         {
             InitializeComponent();

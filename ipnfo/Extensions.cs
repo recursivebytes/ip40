@@ -8,20 +8,38 @@ using System.Threading.Tasks;
 
 namespace ipnfo
 {
+    /// <summary>
+    /// Extensionmethods
+    /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Converts an IP Address to a long 
+        /// </summary>
+        /// <param name="addr"></param>
+        /// <returns></returns>
         public static long ToLong(this IPAddress addr)
         {
             byte[] b = addr.GetAddressBytes();
             return b[0] * 16777216L + b[1] * 65536L + b[2] * 256L + b[3];
         }
 
+        /// <summary>
+        /// Converts an IP Address to a long, ignores the last octett. Is the equivalent of the Network-Address in a Class C Network
+        /// </summary>
+        /// <param name="addr"></param>
+        /// <returns></returns>
         public static long ToLongNetwork(this IPAddress addr)
         {
             byte[] b = addr.GetAddressBytes();
             return b[0] * 16777216L + b[1] * 65536L + b[2] * 256L;
         }
 
+        /// <summary>
+        /// Converts a long  back to an IP Address
+        /// </summary>
+        /// <param name="addr"></param>
+        /// <returns></returns>
         public static IPAddress ToIP(this long addr)
         {
             byte[] b = new byte[4];
@@ -36,6 +54,11 @@ namespace ipnfo
             return new IPAddress(b);
         }
 
+        /// <summary>
+        /// Converts a number (given in Bytes) to a speed string
+        /// </summary>
+        /// <param name="num"></param>
+        /// <returns></returns>
         public static string ToSpeed(this long num)
         {
             string[] unit = new string[] { "B/s", "KB/s","MB/s","GB/s","TB/s" };
@@ -47,6 +70,11 @@ namespace ipnfo
             return string.Format("{0} {1}", current, unit[i]);
         }
 
+        /// <summary>
+        /// Formats a MAC Address
+        /// </summary>
+        /// <param name="addr"></param>
+        /// <returns></returns>
         public static string ToFormattedMAC(this PhysicalAddress addr)
         {
             if (addr == null)

@@ -14,6 +14,9 @@ namespace ipnfo
     /// </summary>
     public partial class App : Application
     {
+        /// <summary>
+        /// The main view model of the instance
+        /// </summary>
         public MainViewModel ViewModel { get; set; }
 
         private void Application_Startup(object sender, StartupEventArgs e)

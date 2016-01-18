@@ -19,13 +19,15 @@ using System.Windows.Shapes;
 namespace ipnfo
 {
     /// <summary>
-    /// Interaktionslogik für TouchMainWindow.xaml
+    /// Modern View
     /// </summary>
     public partial class TouchMainWindow : MetroWindow
     {
 
         
-        
+        /// <summary>
+        /// creates the view
+        /// </summary>
         public TouchMainWindow()
         {
             InitializeComponent();
@@ -110,11 +112,22 @@ namespace ipnfo
 
     }
 
+    /// <summary>
+    /// Tabs in the Modern View
+    /// </summary>
     public enum TouchView
     {
+        /// <summary>
+        /// Class C grid
+        /// </summary>
         Grid,
+        /// <summary>
+        /// List view
+        /// </summary>
         List,
-        Options,
-        About
+        /// <summary>
+        /// settings and about
+        /// </summary>
+        Options
     }
 }

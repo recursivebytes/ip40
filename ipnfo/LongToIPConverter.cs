@@ -9,8 +9,19 @@ using System.Windows.Data;
 
 namespace ipnfo
 {
+    /// <summary>
+    /// Converter that converts the long-representation of an IP to a textual IP. 
+    /// </summary>
     public class LongToIPConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts to an IP.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter">if "lan" the Output starts with an "\\", if "url" the output begins with "http://". </param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             try
@@ -34,6 +45,14 @@ namespace ipnfo
             }
         }
 
+        /// <summary>
+        /// Converts an IP to it's long representation if possible
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             string str = (string)value;

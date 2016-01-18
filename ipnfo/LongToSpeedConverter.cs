@@ -7,13 +7,32 @@ using System.Windows.Data;
 
 namespace ipnfo
 {
+    /// <summary>
+    /// Wrapper for long.ToSpeed()
+    /// </summary>
     public class LongToSpeedConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts a long to a linkspeed string
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             return ((long)value).ToSpeed();
         }
 
+        /// <summary>
+        /// not implemented
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();

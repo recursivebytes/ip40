@@ -16,33 +16,52 @@ using System.Windows.Input;
 
 namespace ipnfo
 {
+    /// <summary>
+    /// The main view model for the application
+    /// </summary>
     public class MainViewModel : Base
     {
+        /// <summary>
+        /// Address of the Current Class C Network that is shown in the View
+        /// TODO: move into view
+        /// </summary>
         public IPAddress CurrentClassCNetwork
         {
             get { return Get<IPAddress>("CurrentClassCNetwork"); }
             set { Set("CurrentClassCNetwork", value); OnPropertyChanged("CurrentClassCNetwork"); }
         }
 
+        /// <summary>
+        /// Configuration object
+        /// </summary>
         public Config Config
         {
             get { return Get<Config>("Config"); }
             set { Set("Config", value); OnPropertyChanged("Config"); }
         }
 
+        /// <summary>
+        /// Current Tab shown in the View. Modern view only.
+        /// TODO: move into view
+        /// </summary>
         public TouchView View
         {
             get { return Get<TouchView>("View"); }
             set { Set("View", value); OnPropertyChanged("View"); }
         }
 
+        /// <summary>
+        /// Currently selected Host. Used to display the GridPopup in modern view.
+        /// </summary>
         public HostInformation CurrentSelected
         {
             get { return Get<HostInformation>("CurrentSelected"); }
             set { Set("CurrentSelected", value); OnPropertyChanged("CurrentSelected"); }
         }
 
-
+        /// <summary>
+        /// Invokes an update on the view for all Porperties
+        /// </summary>
         public new void FireAllPropertiesChanged()
         {
             base.FireAllPropertiesChanged();
@@ -52,6 +71,10 @@ namespace ipnfo
 
 
         private static HostDummy[] dummies;
+        /// <summary>
+        /// Dummies that represent each tile of the Class C Grid
+        /// TODO: move into view
+        /// </summary>
         public static HostDummy[] ClassCDummies
         {
             get
@@ -68,43 +91,51 @@ namespace ipnfo
             }
         }
 
+        /// <summary>
+        /// Changes the displayed Class C network
+        /// TODO: move into view
+        /// </summary>
+        /// <param name="addr"></param>
         public void ChangeClassCNetwork(IPAddress addr)
         {
+            //get the class c address of the given IP addr
             CurrentClassCNetwork = addr;
             byte[] b = addr.GetAddressBytes();
 
-            long start = addr.ToLong();
-            long end = new IPAddress(new byte[] { b[0], b[1], b[2], 255 }).ToLong();
+            long start = addr.ToLong(); //start at x.y.z.0
+            long end = new IPAddress(new byte[] { b[0], b[1], b[2], 255 }).ToLong(); //end at x.y.z.255
 
+            //grab all known Hosts of this range
             HostInformation[] his = Hosts.Where(w => w.IP >= start && w.IP <= end).ToArray();
 
+            //for all IPs of this network...
             for (int i = 1; i < 255; i++)
-            {
-                //ClassCDummies[i].Text = string.Format("{0}.{1}.{2}.{3}", (int)b[0], (int)b[1], (int)b[2], i);
-                //ClassCDummies[i].MVM = this;
-
+            {                
+                //try to find it in the list of the known Hosts and assign it to the dummy
                 HostInformation hi = his.FirstOrDefault(f => f.IP == start + ClassCDummies[i].LastOctettInt);
                 if (hi != null)
                 {
-                    ClassCDummies[i].Host = hi;
+                    ClassCDummies[i].Host = hi; 
                 }
                 else
                     ClassCDummies[i].Host = null;
-                //ClassCDummies[i].FireVisibleStatusUpdate();
 
             }
-
-            
-
+                       
             OnPropertyChanged("ClassCDummies");
         }
 
-
+        /// <summary>
+        /// Updates the Class C grid Hosts
+        /// TODO: move into view
+        /// </summary>
         public void UpdateClassCDummies()
         {
+            //get all known Hosts of the current range
             var start = CurrentClassCNetwork.ToLong();
             var hosts = Hosts.Where(w => w.IP >= start && w.IP <= start + 255);
 
+            //assign them to the grid
             foreach (var h in hosts)
             {
                 ClassCDummies[h.IP - start].Host = h;
@@ -114,7 +145,7 @@ namespace ipnfo
 
         private ICommand cmdNextClassCNetwork;
         /// <summary>
-        /// NextClassCNetwork Command
+        /// Command that scrolls the Class C grid to the next page
         /// </summary>
         public ICommand NextClassCNetworkCommand
         {
@@ -155,7 +186,7 @@ namespace ipnfo
 
         private ICommand cmdPreviousClassCNetwork;
         /// <summary>
-        /// PreviousClassCNetwork Command
+        /// Command that scrolls the Class C grid to the previous page
         /// </summary>
         public ICommand PreviousClassCNetworkCommand
         {
@@ -194,13 +225,18 @@ namespace ipnfo
         }
 
 
-
+        /// <summary>
+        /// List of all known Hosts
+        /// </summary>
         public ObservableCollection<HostInformation> Hosts
         {
             get { return Get<ObservableCollection<HostInformation>>("Hosts"); }
             set { Set("Hosts", value); OnPropertyChanged("Hosts"); }
         }
 
+        /// <summary>
+        /// List of all known Hosts that are online. Subset of Hosts.
+        /// </summary>
         public IEnumerable<HostInformation> HostsOnline
         {
             get
@@ -209,8 +245,12 @@ namespace ipnfo
             }
         }
 
+        /// <summary>
+        /// Creates the Model
+        /// </summary>
         public MainViewModel()
         {
+            //init config, NICs and Hosts
             Config = Config.Load();
             Hosts = new ObservableCollection<HostInformation>();
             foreach (var hi in Config.RecentHosts)
@@ -218,30 +258,33 @@ namespace ipnfo
                 hi.Status = HostStatus.Unknown;
                 Hosts.Add(hi);
             }
-
             
             NICs = new ObservableCollection<NIC>();
-            ScanProgress = 0;
-            
+            ScanProgress = 0;            
 
             ChangeClassCNetwork(new IPAddress(new byte[] { 192, 168, 178, 0 }));
             Task.Run(() => { DiscoverNICs(); });
 
-
+            //auto start scan
             if (Config.AutoStart)
                 if (StartStopCommand.CanExecute(null))
                     StartStopCommand.Execute(null);
-
-
+            
         }
 
+        /// <summary>
+        /// not implemented
+        /// </summary>
+        /// <returns></returns>
         public override object Clone()
         {
             throw new NotImplementedException();
 
         }
 
-
+        /// <summary>
+        /// Fills the IP Range Textboxes with the selected NIC IP Range. Does currently work only for Class C Networks
+        /// </summary>
         public void FillRange()
         {
             if (!Config.AutoFillRange)
@@ -264,50 +307,71 @@ namespace ipnfo
             }
         }
 
-
+        /// <summary>
+        /// This computer name
+        /// </summary>
         public string Computername
         {
             get { return Environment.MachineName; }
         }
 
+        /// <summary>
+        /// Current selected Network Interface
+        /// </summary>
         public NIC CurrentNIC
         {
             get { return Get<NIC>("CurrentNIC"); }
             set { Set("CurrentNIC", value); OnPropertyChanged("CurrentNIC"); FillRange(); }
         }
 
-
+        /// <summary>
+        /// Value that determines if a scan is currently running
+        /// </summary>
         public bool IsAnalyzing
         {
             get { return Get<bool>("IsAnalyzing"); }
             set { Set("IsAnalyzing", value); OnPropertyChanged("IsAnalyzing"); OnPropertyChanged("ScanIPCommand"); OnPropertyChanged("StartStopButtonText"); }
         }
 
-
+        /// <summary>
+        /// value that indicates the scan progress. Range [0,100]
+        /// </summary>
         public double ScanProgress
         {
             get { return Get<double>("ScanProgress"); }
             set { Set("ScanProgress", value); OnPropertyChanged("ScanProgress"); }
         }
 
+        /// <summary>
+        /// Status of Googles DNS 
+        /// </summary>
         public HostStatus GoogleDNSStatus
         {
             get { return Get<HostStatus>("GoogleDNSStatus"); }
             set { Set("GoogleDNSStatus", value); OnPropertyChanged("GoogleDNSStatus"); }
         }
 
+        /// <summary>
+        /// Status of the default DNS
+        /// </summary>
         public HostStatus DNSStatus
         {
             get { return Get<HostStatus>("DNSStatus"); }
             set { Set("DNSStatus", value); OnPropertyChanged("DNSStatus"); }
         }
 
+        /// <summary>
+        /// Status of the Gateway
+        /// </summary>
         public HostStatus GatewayStatus
         {
             get { return Get<HostStatus>("GatewayStatus"); }
             set { Set("GatewayStatus", value); OnPropertyChanged("GatewayStatus"); }
         }
 
+        /// <summary>
+        /// Status of the Internet Connection
+        /// </summary>
         public HostStatus InternetStatus
         {
             get { return Get<HostStatus>("InternetStatus"); }
@@ -316,7 +380,7 @@ namespace ipnfo
 
         private ICommand cmdClearRecentHosts;
         /// <summary>
-        /// ClearRecentHosts Command
+        /// Command that clears the list of known hosts
         /// </summary>
         public ICommand ClearRecentHostsCommand
         {
@@ -339,7 +403,9 @@ namespace ipnfo
         }
 	
 
-
+        /// <summary>
+        /// Current Text of the Start Stop Button. Depends on IsAnalyzing
+        /// </summary>
         public string StartStopButtonText
         {
             get
@@ -355,6 +421,9 @@ namespace ipnfo
             }
         }
 
+        /// <summary>
+        /// Number of Hosts in the current IP range
+        /// </summary>
         public int IPRangeCount
         {
             get
@@ -363,7 +432,9 @@ namespace ipnfo
             }
         }
 
-
+        /// <summary>
+        /// List of available Network Interfaces
+        /// </summary>
         public ObservableCollection<NIC> NICs
         {
             get { return Get<ObservableCollection<NIC>>("NICs"); }
@@ -373,7 +444,7 @@ namespace ipnfo
 
         private ICommand cmdStartStop;
         /// <summary>
-        /// StartStop Command
+        /// Command that starts or stops the scan
         /// </summary>
         public ICommand StartStopCommand
         {
@@ -399,9 +470,9 @@ namespace ipnfo
             else
             {
                 if (Config.UseICMP)
-                    Task.Run(() => { ScanICMP(); });
+                    Task.Run(() => { ScanICMP(); }); //Ping every Host in range
                 else
-                    Task.Run(() => { ScanARP(); });
+                    Task.Run(() => { ScanARP(); }); //Pings only Hosts that are known by ARP cache
             }
         }
 
@@ -410,7 +481,9 @@ namespace ipnfo
 
 
         Regex nicnameRegex = new Regex(@"(Pseudo|Tunneling)", RegexOptions.Compiled);
-
+        /// <summary>
+        /// Discover all available Network Interfaces
+        /// </summary>
         public void DiscoverNICs()
         {
             NICs.Clear();
@@ -427,12 +500,19 @@ namespace ipnfo
             }
         }
 
+        /// <summary>
+        /// Value that indicates if a running scan should be aborted at the next suitable moment
+        /// </summary>
         public bool Stop
         {
             get { return Get<bool>("Stop"); }
             set { Set("Stop", value); OnPropertyChanged("Stop"); }
         }
 
+        /// <summary>
+        /// Scan only known Hosts.
+        /// TODO: does currently not check the status
+        /// </summary>
         public async void ScanARP()
         {
             IsAnalyzing = true;
@@ -460,12 +540,17 @@ namespace ipnfo
             FireAllPropertiesChanged();
         }
 
+        /// <summary>
+        /// Performs the IP scan
+        /// </summary>
         public async void ScanICMP()
         {
             IsAnalyzing = true;
 
+            //set Class C grid to the right page
             ChangeClassCNetwork(Config.IPRangeStart.ToIP().ToLongNetwork().ToIP());
 
+            //fills the list of the Hosts with actual HostInformations for all IPs that are scanned
             for (long i = Config.IPRangeStart; i <= Config.IPRangeEnd; i++)
             {
                 var hi = Hosts.FirstOrDefault(f => f.IP == i);
@@ -482,8 +567,10 @@ namespace ipnfo
                 }
             }
 
+            //update the underlaying Hosts of the dummies
             UpdateClassCDummies();
 
+            //check internet if needed
             if (Config.CheckInternet && CurrentNIC != null)
             {
                 await CheckConnectivity();
@@ -492,26 +579,30 @@ namespace ipnfo
             int hostcount = Hosts.Where(w => w.Pending).Count();
             int current = 0;
             int check = 1;
-            while (check != 0 && !Stop)
+            while (check != 0 && !Stop) //as long there are unchecked IPs...
             {
+                //grab a bunch of pending IPs
                 List<HostInformation> z = Hosts.Where(w => w.Pending).Take(Config.MaxParallelConnections).ToList();
                 z.ForEach(e => e.Status = HostStatus.Checking);
                 List<Task<HostInformation>> tasks = new List<Task<HostInformation>>();
                 foreach (var t in z)
                     tasks.Add(CheckHost(t,Config.PortInformation,Config.PingTimeout,Config.PortScan));
 
+                //and execute the scan for them
                 Task.WaitAll(tasks.ToArray());
-                OnPropertyChanged("HostsOnline");
 
+                //invoke view update
+                OnPropertyChanged("HostsOnline");
                 check = z.Count();
                 current += check;
                 ScanProgress = ((double)current / (double)hostcount) * 100;
 
+                //scroll the the next page on the Class C grid if needed
                 if (Config.AutoScroll && check > 0 && z.FirstOrDefault() != null)
                     ChangeClassCNetwork(z.First().IP.ToIP().ToLongNetwork().ToIP());
-
             }
 
+            //now get the MACs of all newly found Hosts and store them. Update RecentHosts as well.
             var l = GetAllDevicesOnLAN();
             foreach(var d in l)
             {
@@ -528,7 +619,7 @@ namespace ipnfo
             }
 
             
-
+            //reset Pending status and do cleanup
             foreach (var h in Hosts)
                 h.Pending = false;
             ScanProgress = Stop ? 0 : 100;
@@ -537,8 +628,12 @@ namespace ipnfo
             FireAllPropertiesChanged();
         }
 
+        /// <summary>
+        /// Checks if the Internet is available
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> CheckConnectivity()
-        {
+        {            
             try
             {
                 Ping p = new Ping();
@@ -585,20 +680,31 @@ namespace ipnfo
             return true;
         }
 
+        /// <summary>
+        /// Performs the individual scan an a Host
+        /// </summary>
+        /// <param name="hi">The Host to be scanned</param>
+        /// <param name="PortInformation">The ports to be scanned</param>
+        /// <param name="PingTimeout">Timeout for Ping</param>
+        /// <param name="PortScan">true, if Ports should be scanned</param>
+        /// <param name="elseStatus">Default-Status if not successful (no answer)</param>
+        /// <returns></returns>
         public static async Task<HostInformation> CheckHost(HostInformation hi, List<PortInformation> PortInformation, int PingTimeout, bool PortScan, HostStatus elseStatus = HostStatus.Offline)
         {
             try
             {
                 Ping p = new Ping();
                 IPAddress target = hi.IP.ToIP();
-                PingReply pr = await p.SendPingAsync(target, PingTimeout);
-                hi.Status = pr.Status == IPStatus.Success ? HostStatus.Online : elseStatus;
-                hi.Ping = (int)pr.RoundtripTime;
+                PingReply pr = await p.SendPingAsync(target, PingTimeout); //the actual ping
+                hi.Status = pr.Status == IPStatus.Success ? HostStatus.Online : elseStatus; //set the status
+                hi.Ping = (int)pr.RoundtripTime; //and the ping
 
+                //retrieve some more information if Host is online
                 if (hi.Status == HostStatus.Online)
                 {
                     try
                     {
+                        //get the Hostname
                         IPHostEntry hostEntry = Dns.GetHostEntry(target);
                         hi.Hostname = hostEntry.HostName;
                     }
@@ -607,30 +713,28 @@ namespace ipnfo
 
                     }
 
+                    //perform the Port scan
                     if (PortScan)
                     {
+                        //scan the Ports in parallel to save time.
+                        //TODO: LIMIT TO PRIVATE IP ADDRESS RANGES! or detach the port scan from the IP scan to deal with DoS
                         Parallel.ForEach(PortInformation, pi =>
                         {
                                 Parallel.ForEach(pi.Ports, el =>
                                 {
                                     try
                                     {
+                                        //try to connect to the port
                                         var client = new TcpClient();
                                         var result = client.BeginConnect(target, el, null, null);
                                         var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
 
                                         if (success)
                                         {
+                                            //save information when successful
                                             client.EndConnect(result);
                                             hi.OpenPorts.Add(pi);
                                         }
-
-                                        // we have connected
-
-                                        /*
-                                        TcpClient tcp = new TcpClient();
-                                        tcp.Connect(target, port);*/
-
                                     }
                                     catch (SocketException)
                                     {
@@ -641,12 +745,7 @@ namespace ipnfo
                     }
                 }
 
-
                 hi.Pending = false;
-
-                /*await Task.Delay(3000);
-                hi.Status = HostStatus.Offline;
-                hi.Pending = false;*/
                 return hi;
             }
             catch
@@ -655,7 +754,11 @@ namespace ipnfo
             }
         }
 
-
+        /// <summary>
+        /// Opens a Host by a specific service
+        /// </summary>
+        /// <param name="hi"></param>
+        /// <param name="pi"></param>
         public void CallService(HostInformation hi, PortInformation pi)
         {
             switch(pi.Name)
@@ -669,7 +772,9 @@ namespace ipnfo
             }
         }
 
-
+        /// <summary>
+        /// Sets the Flag to abort the scan
+        /// </summary>
         public void AbortScan()
         {
             Stop = true;

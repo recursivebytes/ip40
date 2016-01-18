@@ -13,6 +13,9 @@ using System.Xml.Serialization;
 
 namespace ipnfo
 {
+    /// <summary>
+    /// Class the represents a Host
+    /// </summary>
     public class HostInformation : Base
     {
         /// <summary>
@@ -23,31 +26,47 @@ namespace ipnfo
             OpenPorts = new List<PortInformation>();
         }
 
+        /// <summary>
+        /// Creates new Host
+        /// </summary>
+        /// <param name="ip">IP Address (as a long). Use extensionmethod IPAddress.ToLong() to calculate this value </param>
         public HostInformation(long ip)
         {
             OpenPorts = new List<PortInformation>();
             IP = ip;
         }
 
+        /// <summary>
+        /// Creates a new host by a given IP
+        /// </summary>
+        /// <param name="ip"></param>
         public HostInformation(string ip)
         {
             OpenPorts = new List<PortInformation>();
             IP = IPAddress.Parse(ip).ToLong();
         }
 
+        /// <summary>
+        /// The IP of the Host
+        /// </summary>
         public long IP
         {
             get { return Get<long>("IP"); }
             set { Set("IP", value); OnPropertyChanged("IP"); }
         }
 
-
+        /// <summary>
+        /// The MAC Address of the Host
+        /// </summary>
         public byte[] MACBytes
         {
             get { return MAC.GetAddressBytes(); }
             set { Set("MAC", new PhysicalAddress(value)); OnPropertyChanged("MAC"); }
         }
 
+        /// <summary>
+        /// Fancy wrapper for the MAC
+        /// </summary>
         [XmlIgnore]
         public PhysicalAddress MAC
         {
@@ -55,6 +74,9 @@ namespace ipnfo
             set { Set("MAC", value); OnPropertyChanged("MAC"); OnPropertyChanged("CanWOL"); }
         }
 
+        /// <summary>
+        /// Status of the Host. It represents the actual status of the Host. For Status including Pending-remark, use HostInformation.VisibleStatus
+        /// </summary>
         [XmlIgnore]
         public HostStatus Status
         {
@@ -62,6 +84,9 @@ namespace ipnfo
             set { Set("Status", value); OnPropertyChanged("Status"); OnPropertyChanged("VisibleStatus"); OnPropertyChanged("CanWOL"); }
         }
 
+        /// <summary>
+        /// Flag to determine if the Host is remarked for a scan, but not scanned yet
+        /// </summary>
         [XmlIgnore]
         public bool Pending
         {
@@ -69,6 +94,9 @@ namespace ipnfo
             set { Set("Pending", value); OnPropertyChanged("Pending"); OnPropertyChanged("VisibleStatus"); }
         }
 
+        /// <summary>
+        /// Roundtrip time of the Host (Ping) in ms
+        /// </summary>
         [XmlIgnore]
         public int Ping
         {
@@ -76,12 +104,18 @@ namespace ipnfo
             set { Set("Ping", value); OnPropertyChanged("Ping"); }
         }
 
+        /// <summary>
+        /// Name of the Host
+        /// </summary>
         public string Hostname
         {
             get { return Get<string>("Hostname"); }
             set { Set("Hostname", value); OnPropertyChanged("Hostname"); }
         }
 
+        /// <summary>
+        /// Value that determines if a WOL message can be sent to the host
+        /// </summary>
         public bool CanWOL
         {
             get
@@ -90,7 +124,9 @@ namespace ipnfo
             }
         }
 
-
+        /// <summary>
+        /// Status for the View. Includes the HostStatus.Pending value based on HostInformation.Pending
+        /// </summary>
         public HostStatus VisibleStatus
         {
             get
@@ -99,6 +135,9 @@ namespace ipnfo
             }
         }
 
+        /// <summary>
+        /// Textual representation of this Host
+        /// </summary>
         public string Text
         {
             get
@@ -107,6 +146,9 @@ namespace ipnfo
             }
         }
 
+        /// <summary>
+        /// Textual representation of the last octett
+        /// </summary>
         public string LastOctett
         {
             get
@@ -115,11 +157,18 @@ namespace ipnfo
             }
         }
 
+        /// <summary>
+        /// returns Text
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return Text/*+", "+string.Join("|",OpenPorts.Select(s=>s.ShortName))*/;
         }
 
+        /// <summary>
+        /// List of open ports (result from portscan)
+        /// </summary>
         [XmlIgnore]
         public List<PortInformation> OpenPorts
         {
@@ -129,7 +178,7 @@ namespace ipnfo
 
         private ICommand cmdWakeOnLan;
         /// <summary>
-        /// WakeOnLan Command
+        /// Command that sends the magic packet
         /// </summary>
         public ICommand WakeOnLanCommand
         {
@@ -154,7 +203,7 @@ namespace ipnfo
 
         private ICommand cmdSMB;
         /// <summary>
-        /// SMB Command
+        /// Command that opens the IP in Windows Explorer to view File shares
         /// </summary>
         public ICommand SMBCommand
         {
@@ -179,7 +228,7 @@ namespace ipnfo
 
         private ICommand cmdScanIP;
         /// <summary>
-        /// ScanIP Command
+        /// Scans this Host
         /// </summary>
         public ICommand ScanIPCommand
         {
@@ -191,7 +240,6 @@ namespace ipnfo
             }
         }
 
-        bool canscan = true;
         private bool CanScanIP()
         {
             return Status != HostStatus.Checking;
@@ -203,22 +251,37 @@ namespace ipnfo
         }
 	
 	
-
+        /// <summary>
+        /// not implemented
+        /// </summary>
+        /// <returns></returns>
         public override object Clone()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Scans this Host. 
+        /// Use delay and rounds for a repeated, polling-like check (i.e. to get notified when the WOL was successful).
+        /// Uses 1s as Ping Timeout.
+        /// </summary>
+        /// <param name="delay">delay to start the scan in ms</param>
+        /// <param name="rounds">number of times the whole scan is repeated (including delay)</param>
         private async void CheckStatus(int delay, int rounds)
         {
             Status = HostStatus.Checking;
 
+            //n rounds
             for(int i=0; i<rounds; i++)
             {
+                //wait delay
                 if(delay>0)
                     await Task.Delay(delay);
 
+                //send ping
                 HostInformation hi = await MainViewModel.CheckHost(this, null, 1000, false, HostStatus.Checking);
+
+                //if successful, more rounds aren't needed
                 if(hi.Status == HostStatus.Online)
                 {
                     Status = HostStatus.Online;
@@ -226,9 +289,11 @@ namespace ipnfo
                 }
             }
 
+            //no answer
             Status = HostStatus.Offline;
         }
 
+        /// <summary>
         /// Sends a Wake-On-Lan packet to the specified MAC address.
         /// </summary>
         /// <param name="mac">Physical MAC address to send WOL packet to.</param>

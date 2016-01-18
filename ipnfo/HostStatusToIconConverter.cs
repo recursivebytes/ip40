@@ -10,8 +10,19 @@ using System.Windows.Media.Imaging;
 
 namespace ipnfo
 {
+    /// <summary>
+    /// Converts a Status to a ellipse-style.
+    /// </summary>
     public class HostStatusToIconConverter : IValueConverter
     {
+        /// <summary>
+        /// Converts forward. Uses the offline, online, busy and unknown styles in IconResources.xaml to choose from
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             Uri resourceLocater = new Uri("/ip40;component/IconResources.xaml", System.UriKind.Relative);
@@ -31,6 +42,14 @@ namespace ipnfo
             
         }
 
+        /// <summary>
+        /// not implemented
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetType"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();

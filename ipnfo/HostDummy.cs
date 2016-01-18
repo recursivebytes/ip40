@@ -8,13 +8,26 @@ using System.Threading.Tasks;
 
 namespace ipnfo
 {
+    /// <summary>
+    /// Wrapper for a HostInformation. Each HostDummy is bound to a tile of the Class C Grid. 
+    /// When changing the Class C Network the HostDummy.Host Property gets changed to the corresponding IP. 
+    /// This is used to prevent the creation of thousands of dummy HostInformation objects just for being able to scroll through the networks.
+    /// HostDummy = IP seen on screen, HostInformation = actual IP that is used
+    /// </summary>
     public class HostDummy : Base
     {
+        /// <summary>
+        /// Creates a new dummy
+        /// </summary>
+        /// <param name="lo">Host ID (last octett of Class C network)</param>
         public HostDummy(int lo)
         {
             lastoctett = lo;
         }
 
+        /// <summary>
+        /// Status of the Host
+        /// </summary>
         public HostStatus Status
         {
             get
@@ -27,6 +40,9 @@ namespace ipnfo
             }
         }
 
+        /// <summary>
+        /// The actual Host behind the dummy
+        /// </summary>
         public HostInformation Host
         {
             get { return Get<HostInformation>("Host"); }
@@ -37,6 +53,9 @@ namespace ipnfo
        
 
         private int lastoctett;
+        /// <summary>
+        /// String representation of the last octett
+        /// </summary>
         public string LastOctett
         {
             get
@@ -57,6 +76,9 @@ namespace ipnfo
             }
         }
 
+        /// <summary>
+        /// Int representation of the last octett
+        /// </summary>
         public int LastOctettInt
         {
             get
@@ -65,19 +87,44 @@ namespace ipnfo
             }
         }
 
+        /// <summary>
+        /// not implemented
+        /// </summary>
+        /// <returns></returns>
         public override object Clone()
         {
             throw new NotImplementedException();
         }
     }
 
+    /// <summary>
+    /// Status of a Host
+    /// </summary>
     public enum HostStatus : int
     {
+        /// <summary>
+        /// Unknown
+        /// </summary>
         Unknown = 6,
+        /// <summary>
+        /// Pending, used for not yet processed but remarked IPs. Mainly used for a big range scan
+        /// </summary>
         Pending = 3,
+        /// <summary>
+        /// Online
+        /// </summary>
         Online = 1, 
+        /// <summary>
+        /// Not available (offline)
+        /// </summary>
         Offline = 4,
+        /// <summary>
+        /// Host is currently checked
+        /// </summary>
         Checking = 2,
+        /// <summary>
+        /// Disabled. Mainly used for unscannable IPs
+        /// </summary>
         Disabled = 5
     }
 

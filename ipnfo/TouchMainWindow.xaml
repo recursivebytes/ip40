@@ -423,12 +423,11 @@
                                                     <Button Visibility="Collapsed" Grid.Column="0" Margin="2" ToolTip="Bekannte Rechner aus Verlauf löschen" Command="{Binding ClearRecentHostsCommand}">
                                                         <Button.Content>
                                                             <StackPanel Orientation="Horizontal">
-                                                                <Image Source="Icons/time_delete.png" />
                                                                 <TextBlock Text="Verlauf leeren" />
                                                             </StackPanel>
                                                         </Button.Content>
                                                     </Button>
-                                                    <Button Grid.Column="0" Margin="10,2,2,2" Visibility="Collapsed" ToolTip="Über IP46" Click="Button_Click">
+                                                    <Button Grid.Column="0" Margin="10,2,2,2" Visibility="Collapsed" ToolTip="Über IP40" Click="Button_Click">
                                                         <Button.Content>
                                                             <StackPanel Orientation="Horizontal">
                                                                 <TextBlock FontSize="24" Text="Über..." />
@@ -437,9 +436,9 @@
                                                     </Button>
                                                 </StackPanel>
 
-                                                <StackPanel Margin="0,20,0,0">
+                                                <StackPanel Margin="0,40,0,0">
                                                     <TextBlock Text="Über..." FontSize="30" FontWeight="Bold" />
-                                                    <Rectangle Height="2" Width="{Binding ActualWidth}"  Margin="5,0,5,0" >
+                                                    <Rectangle Height="2" Width="{Binding ActualWidth}"  Margin="5,0,5,30" >
                                                         <Rectangle.Fill>
                                                             <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5" >
                                                                 <GradientStop Color="#FF41B1E1" Offset="0" />
@@ -457,8 +456,8 @@
                                                                 <Setter Property="FontSize" Value="18" />
                                                             </Style>
                                                         </Grid.Resources>
-                                                        <StackPanel>
-                                                            <Image Source="Icons/logo.png" Width="128" Height="128" Margin="0,5,0,0" />
+                                                        <Image Source="Icons/logo.png" Width="128" Height="128" Margin="0,5,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                        <StackPanel Grid.Column="1">
                                                             <Grid HorizontalAlignment="Center">
                                                                 <Grid.ColumnDefinitions>
                                                                     <ColumnDefinition Width="auto" MinWidth="100" />
@@ -486,31 +485,7 @@
                                                                 </TextBlock>                                                                
                                                             </Grid>
 
-                                                        </StackPanel>
-                                                        <StackPanel Grid.Column="1" Margin="80,0,0,0">
-                                                            <StackPanel.Resources>
-                                                                <Style TargetType="TextBlock">
-                                                                    <Setter Property="FontSize" Value="18" />
-                                                                </Style>
-                                                            </StackPanel.Resources>
-                                                            <TextBlock Text="Vielen Dank an:" Margin="5,40,0,10" />
-                                                            <StackPanel Margin="5">
-                                                                <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
-                                                                    <TextBlock Text="Yusuke Kamiyamane"  />
-                                                                    <TextBlock Text=" (Icons) " />
-                                                                </StackPanel>
-                                                                <TextBlock>
-                        <Hyperlink TargetName="http://p.yusukekamiyamane.com/" Click="Hyperlink_Click">http://p.yusukekamiyamane.com</Hyperlink>
-                                                                </TextBlock>
-                                                                <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
-                                                                    <TextBlock Text="Mark James" />
-                                                                    <TextBlock Text=" (Icons) " />
-                                                                </StackPanel>
-                                                                <TextBlock>
-                        <Hyperlink TargetName="http://famfamfam.com" Click="Hyperlink_Click">http://famfamfam.com</Hyperlink>
-                                                                </TextBlock>
-                                                            </StackPanel>
-                                                        </StackPanel>
+                                                        </StackPanel>                                                       
                                                     </Grid>
                                                 </StackPanel>
                                             </StackPanel>

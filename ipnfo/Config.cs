@@ -18,7 +18,7 @@ namespace ipnfo
         /// <summary>
         /// Path to the Configfile (without filename)
         /// </summary>
-        public static readonly string PATH = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\ip46\\";
+        public static readonly string PATH = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+"\\ip40\\";
         /// <summary>
         /// Config file name only
         /// </summary>

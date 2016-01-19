@@ -179,21 +179,6 @@
     <Resource Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\disconnect.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\wall-brick.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\drive_network.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\time_delete.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\computer_link.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Icons\logo.png" />
   </ItemGroup>
   <ItemGroup>

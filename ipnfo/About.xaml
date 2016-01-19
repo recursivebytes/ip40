@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ipnfo.About"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" WindowStyle="ToolWindow" ResizeMode="NoResize" Loaded="Window_Loaded"
-        Title="Über IP40" Height="360" Width="360">
+        Title="Über IP40" Height="260" Width="360">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -36,23 +36,7 @@
                 </TextBlock>
                
             </Grid>
-            <TextBlock Text="Vielen Dank an:" Margin="5,40,0,10" />
-            <StackPanel Margin="5">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Yusuke Kamiyamane" FontWeight="Bold" />
-                    <TextBlock Text=" (Icons), " />
-                    <TextBlock>
-                        <Hyperlink TargetName="http://p.yusukekamiyamane.com/" Click="Hyperlink_Click">http://p.yusukekamiyamane.com</Hyperlink>
-                    </TextBlock>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Mark James" FontWeight="Bold" />
-                    <TextBlock Text=" (Icons), " />
-                    <TextBlock>
-                        <Hyperlink TargetName="http://famfamfam.com" Click="Hyperlink_Click">http://famfamfam.com</Hyperlink>
-                    </TextBlock>
-                </StackPanel>
-            </StackPanel>
+           
         </StackPanel>
     </Grid>
 </Window>

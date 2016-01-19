@@ -109,7 +109,7 @@ namespace ipnfo
             TextBlock b = sender as TextBlock;
             if(b!=null)
             {
-                b.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString(2);
+                b.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString(2) + " Beta";
             }
         }
 

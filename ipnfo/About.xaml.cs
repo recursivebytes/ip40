@@ -37,7 +37,7 @@ namespace ipnfo
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            version.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString(2);
+            version.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString(2) + " Beta";
             date.Text = RetrieveLinkerTimestamp().ToString("dd.MM.yyyy");
         }
 

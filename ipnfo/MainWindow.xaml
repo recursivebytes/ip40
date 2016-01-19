@@ -221,7 +221,7 @@
                     <StackPanel>
                         <CheckBox Content="Zeige Klasse-C-Netz Ansicht" IsChecked="{Binding Config.ShowClassCView}" Name="showccn" />
                         <CheckBox Content="Zeige Netzwerkinformationen" IsChecked="{Binding Config.ShowSystemInformation}" Name="showgeneral" />
-                        <CheckBox Content="Starte Scan bei Programmstart" IsChecked="{Binding Config.AutoStart}" />
+                        <CheckBox Content="Starte Scan bei Programmstart" IsChecked="{Binding Config.AutoStart}" Visibility="Collapsed" />
                         <CheckBox Content="Bei Interface-Wechsel Adressbereich übernehmen" IsChecked="{Binding Config.AutoFillRange}"  />
                         <StackPanel Orientation="Horizontal" Visibility="Collapsed" >
                             <CheckBox Content="Port-Scan" VerticalAlignment="Center" IsChecked="{Binding Config.PortScan}" />

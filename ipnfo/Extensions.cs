@@ -20,6 +20,8 @@ namespace ipnfo
         /// <returns></returns>
         public static long ToLong(this IPAddress addr)
         {
+            if (addr == null)
+                return 0;
             byte[] b = addr.GetAddressBytes();
             return b[0] * 16777216L + b[1] * 65536L + b[2] * 256L + b[3];
         }
@@ -31,6 +33,9 @@ namespace ipnfo
         /// <returns></returns>
         public static long ToLongNetwork(this IPAddress addr)
         {
+            if (addr == null)
+                return 0;
+
             byte[] b = addr.GetAddressBytes();
             return b[0] * 16777216L + b[1] * 65536L + b[2] * 256L;
         }

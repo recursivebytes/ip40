@@ -159,7 +159,7 @@ namespace ipnfo
             MaxParallelConnections = 64;
             CheckInternet = true;
             AutoFillRange = true;
-            AutoStart = true;
+            AutoStart = false;
             PortScan = false;
             ShowClassCView = true;
             ShowSystemInformation = true;

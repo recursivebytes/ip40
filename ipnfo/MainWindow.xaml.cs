@@ -114,6 +114,13 @@ namespace ipnfo
         {
             if (DataContext != null)
                 ((MainViewModel)DataContext).PropertyChanged += mvm_PropertyChanged;
+
+            MainViewModel m = DataContext as MainViewModel;
+
+            if (m != null)
+            {
+                m.FireAllPropertiesChanged();
+            }    
         }
 
         void mvm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -125,6 +132,7 @@ namespace ipnfo
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ((MainViewModel)DataContext).FillRange();
+            ((MainViewModel)DataContext).ChangeClassCNetwork(((MainViewModel)DataContext).Config.IPRangeStart.ToIP());
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -164,8 +172,7 @@ namespace ipnfo
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if(DataContext!=null)
-            ((MainViewModel)DataContext).FireAllPropertiesChanged();
+                    
         }
 
         /// <summary>

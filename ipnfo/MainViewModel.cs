@@ -159,7 +159,7 @@ namespace ipnfo
 
         private bool CanNextClassCNetwork()
         {
-            return true;
+            return CurrentClassCNetwork.ToLong() >1;
         }
 
         private void OnNextClassCNetwork(object parameter)
@@ -200,7 +200,7 @@ namespace ipnfo
 
         private bool CanPreviousClassCNetwork()
         {
-            return true;
+            return CurrentClassCNetwork.ToLong() > 1;
         }
 
         private void OnPreviousClassCNetwork(object parameter)
@@ -261,14 +261,9 @@ namespace ipnfo
             
             NICs = new ObservableCollection<NIC>();
             ScanProgress = 0;            
-
-            ChangeClassCNetwork(new IPAddress(new byte[] { 192, 168, 178, 0 }));
+            
             Task.Run(() => { DiscoverNICs(); });
-
-            //auto start scan
-            if (Config.AutoStart)
-                if (StartStopCommand.CanExecute(null))
-                    StartStopCommand.Execute(null);
+           
             
         }
 
@@ -498,6 +493,7 @@ namespace ipnfo
                     NICs.Add(n);
                 }
             }
+            CurrentNIC = NICs.FirstOrDefault();
         }
 
         /// <summary>

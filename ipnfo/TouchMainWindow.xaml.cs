@@ -31,6 +31,17 @@ namespace ipnfo
         public TouchMainWindow()
         {
             InitializeComponent();
+            DataContextChanged += TouchMainWindow_DataContextChanged;
+        }
+
+        void TouchMainWindow_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            MainViewModel m = DataContext as MainViewModel;
+
+            if (m != null)
+            {
+                m.FireAllPropertiesChanged();
+            }    
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -90,6 +101,7 @@ namespace ipnfo
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ((MainViewModel)DataContext).FillRange();
+            ((MainViewModel)DataContext).ChangeClassCNetwork(((MainViewModel)DataContext).Config.IPRangeStart.ToIP());
         }
 
         private void version_Loaded(object sender, RoutedEventArgs e)
@@ -108,6 +120,11 @@ namespace ipnfo
             {
                 b.Text = About.RetrieveLinkerTimestamp().ToString("dd.MM.yyyy");
             }
+        }
+
+        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+          
         }
 
     }

@@ -216,7 +216,7 @@
                                                                             </LinearGradientBrush>
                                                                         </Path.Fill>
                                                                         <Path.Effect>
-                                                                            <DropShadowEffect ShadowDepth="0" BlurRadius="3" Color="DarkGreen" />
+                                                                            <DropShadowEffect ShadowDepth="0" BlurRadius="1" Color="DarkGreen" />
                                                                         </Path.Effect>
                                                                     </Path>
                                                                 </Button.Content>

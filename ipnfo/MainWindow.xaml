@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:ipnfo" Closing="Window_Closing" 
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" Loaded="Window_Loaded" Icon="Icons/logo2.png"
-        Title="IP40" Height="800" Width="700">
+        Title="IP40" Height="800" Width="700" MinWidth="550">
     <Grid>
         <Grid.Resources>
             <BooleanToVisibilityConverter x:Key="b2v" />
@@ -60,7 +60,7 @@
                 <TextBlock Text="IP-Konfiguration: " Grid.Row="3" />
                 <TextBlock Text="{Binding CurrentNIC.UsesDHCP, Converter={StaticResource b2t}}" Grid.Column="1" Grid.Row="3" />
 
-                <TextBlock Text="Max. Geschw.: " Grid.Row="0" Grid.Column="2" />
+                <TextBlock Text="Ethernet-Link: " Grid.Row="0" Grid.Column="2" />
                 <TextBlock Text="{Binding CurrentNIC.Speed, Converter={StaticResource l2s}}" Grid.Row="0" Grid.Column="3" />
                 <TextBlock Text="MAC-Adresse: " Grid.Row="1" Grid.Column="2" />
                 <TextBlock Text="{Binding CurrentNIC.MAC, Converter={StaticResource m2s}}" Grid.Column="3" Grid.Row="1" local:TextBlockHelper.CopyOnClick="true" />
@@ -98,7 +98,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="{Binding Host.VisibleStatus, Converter={StaticResource s2b}, Mode=OneWay, FallbackValue=LightGray}" Margin="1" MouseDown="Border_MouseDown">
+                    <Border Background="{Binding Host.VisibleStatus, Converter={StaticResource s2b}, Mode=OneWay, FallbackValue=LightGray}" Margin="1" MouseDown="Border_MouseDown" ToolTip="Klick sendet Ping, Doppelklick sendet WOL-Paket">
                         <TextBlock Text="{Binding LastOctett, FallbackValue=.254}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         <Border.ContextMenu>
                             <ContextMenu>                                
@@ -107,7 +107,7 @@
                                 <MenuItem Header="Kopiere Hostname" Click="CopyText" Name="host" />
                                 <Separator />
                                 <MenuItem Header="Sende WOL-Paket" Command="{Binding Host.WakeOnLanCommand}" />
-                                <MenuItem Header="Öffne in Explorer" Command="{Binding Host.SMBCommand}">
+                                <MenuItem Header="Öffne in Explorer" Command="{Binding Host.SMBCommand}" Visibility="Collapsed">
                                     
                                 </MenuItem>
                             </ContextMenu>
@@ -136,7 +136,7 @@
                                                             </LinearGradientBrush>
                                                         </Path.Fill>
                                                         <Path.Effect>
-                                                            <DropShadowEffect ShadowDepth="0" BlurRadius="3" Color="DarkGreen" />
+                                                            <DropShadowEffect ShadowDepth="0" BlurRadius="1" Color="DarkGreen" />
                                                         </Path.Effect>
                                                     </Path>
                                                 </ControlTemplate>
@@ -172,7 +172,7 @@
                         <GridViewColumn Header="Ping">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock>
+                                    <TextBlock HorizontalAlignment="Center">
                                         <TextBlock.Text>
                                             <MultiBinding Converter="{StaticResource p2t}">
                                                 <Binding Path="Ping" />
@@ -227,11 +227,12 @@
                             <CheckBox Content="Port-Scan" VerticalAlignment="Center" IsChecked="{Binding Config.PortScan}" />
                             <Button Content="Einstellungen" Margin="5,0,0,0" IsEnabled="False" Visibility="Collapsed" />
                         </StackPanel>
+                        <CheckBox Content="Klasse-C-Netz Ansicht automatisch umblättern" IsChecked="{Binding Config.AutoScroll}"/>
+                        <CheckBox Content="Internet-Erreichbarkeit prüfen" IsChecked="{Binding Config.CheckInternet}"  />
 
                     </StackPanel>
                     <StackPanel Grid.Column="1">
-                        <CheckBox Content="Klasse-C-Netz Ansicht automatisch umblättern" IsChecked="{Binding Config.AutoScroll}"/>
-                        <CheckBox Content="Internet-Erreichbarkeit prüfen" IsChecked="{Binding Config.CheckInternet}"  />
+                        
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Max. parallele Verbindungen: " />
                             <xctk:IntegerUpDown Minimum="1" Maximum="99" Value="{Binding Config.MaxParallelConnections}" />
@@ -258,18 +259,19 @@
                                     </StackPanel>
                                 </Button.Content>
                             </Button>
-                            <Button Grid.Column="0" Margin="10,2,2,2" ToolTip="Über IP40" Click="Button_Click">
+                            
+                            <TextBlock Text="Benutzeroberfläche: " />
+                            <ComboBox SelectedItem="{Binding Config.GUIType}"  SelectedIndex="0" local:EnumHelper.Enum="{x:Type local:GUIType}">
+                                
+                            </ComboBox>                            
+                        </StackPanel>
+                        <Button Grid.Column="0" Width="80" HorizontalAlignment="Left" Margin="1" ToolTip="Über IP40" Click="Button_Click">
                                 <Button.Content>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="Über..." />
                                     </StackPanel>
                                 </Button.Content>
                             </Button>
-                            <TextBlock Text="Benutzeroberfläche: " />
-                            <ComboBox SelectedItem="{Binding Config.GUIType}"  SelectedIndex="0" local:EnumHelper.Enum="{x:Type local:GUIType}">
-                                
-                            </ComboBox>
-                        </StackPanel>
                     </StackPanel>
                     
                 </Grid>

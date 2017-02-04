@@ -204,20 +204,42 @@ namespace ipnfo
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                HostDummy hd = ((FrameworkElement)sender).DataContext as HostDummy;
-                if (hd != null)
+                if (e.ClickCount > 1)
                 {
-                    if (hd.Host == null)
+                    HostDummy hd = ((FrameworkElement)sender).DataContext as HostDummy;
+                    if (hd != null)
                     {
-                        HostInformation hi = new HostInformation(((MainViewModel)DataContext).CurrentClassCNetwork.ToLong() + (long)hd.LastOctettInt);
-                        hd.Host = hi;
-                    }
+                        if (hd.Host == null)
+                        {
+                            HostInformation hi = new HostInformation(((MainViewModel)DataContext).CurrentClassCNetwork.ToLong() + (long)hd.LastOctettInt);
+                            hd.Host = hi;
+                        }
 
-                    if (hd.Host != null)
+                        if (hd.Host != null)
+                        {
+                            if(hd.Host.WakeOnLanCommand.CanExecute(null))
+                                hd.Host.WakeOnLanCommand.Execute(null);
+                        }
+                    }
+                }
+                else
+                {
+                    HostDummy hd = ((FrameworkElement)sender).DataContext as HostDummy;
+                    if (hd != null)
                     {
-                        hd.Host.ScanIPCommand.Execute(null);
+                        if (hd.Host == null)
+                        {
+                            HostInformation hi = new HostInformation(((MainViewModel)DataContext).CurrentClassCNetwork.ToLong() + (long)hd.LastOctettInt);
+                            hd.Host = hi;
+                        }
+
+                        if (hd.Host != null)
+                        {
+                            hd.Host.ScanIPCommand.Execute(null);
+                        }
                     }
                 }
             }

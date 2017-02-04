@@ -4,7 +4,7 @@
         <Setter Property="Margin" Value="5" />
         <Setter Property="Effect">
             <Setter.Value>
-                <DropShadowEffect BlurRadius="10" Color="DarkGreen" Direction="0" ShadowDepth="0" />
+                <DropShadowEffect BlurRadius="3" Color="DarkGreen" Direction="0" ShadowDepth="0" />
             </Setter.Value>
         </Setter>
         <Setter Property="Fill">
@@ -21,7 +21,7 @@
         <Setter Property="Margin" Value="5" />
         <Setter Property="Effect">
             <Setter.Value>
-                <DropShadowEffect BlurRadius="10" Color="DarkRed" Direction="0" ShadowDepth="0" />
+                <DropShadowEffect BlurRadius="3" Color="DarkRed" Direction="0" ShadowDepth="0" />
             </Setter.Value>
         </Setter>
         <Setter Property="Fill">
@@ -38,7 +38,7 @@
         <Setter Property="Margin" Value="5" />
         <Setter Property="Effect">
             <Setter.Value>
-                <DropShadowEffect BlurRadius="10" Color="Goldenrod" Direction="0" ShadowDepth="0" />
+                <DropShadowEffect BlurRadius="3" Color="Goldenrod" Direction="0" ShadowDepth="0" />
             </Setter.Value>
         </Setter>
         <Setter Property="Fill">
@@ -55,7 +55,7 @@
         <Setter Property="Margin" Value="5" />
         <Setter Property="Effect">
             <Setter.Value>
-                <DropShadowEffect BlurRadius="5" Color="DarkGray" Direction="0" ShadowDepth="0" />
+                <DropShadowEffect BlurRadius="1" Color="DarkGray" Direction="0" ShadowDepth="0" />
             </Setter.Value>
         </Setter>
         <Setter Property="Fill">

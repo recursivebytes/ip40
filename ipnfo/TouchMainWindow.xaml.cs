@@ -40,6 +40,7 @@ namespace ipnfo
 
             if (m != null)
             {
+                ((MainViewModel)DataContext).ChangeClassCNetwork(((MainViewModel)DataContext).Config.IPRangeStart.ToIP());
                 m.FireAllPropertiesChanged();
             }    
         }
@@ -124,7 +125,7 @@ namespace ipnfo
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-          
+            
         }
 
     }

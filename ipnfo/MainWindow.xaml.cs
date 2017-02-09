@@ -208,7 +208,7 @@ namespace ipnfo
             
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                if (e.ClickCount > 1)
+                /*if (e.ClickCount > 1)
                 {
                     HostDummy hd = ((FrameworkElement)sender).DataContext as HostDummy;
                     if (hd != null)
@@ -225,9 +225,9 @@ namespace ipnfo
                                 hd.Host.WakeOnLanCommand.Execute(null);
                         }
                     }
-                }
-                else
-                {
+                }*/
+                //else
+                //{
                     HostDummy hd = ((FrameworkElement)sender).DataContext as HostDummy;
                     if (hd != null)
                     {
@@ -242,7 +242,7 @@ namespace ipnfo
                             hd.Host.ScanIPCommand.Execute(null);
                         }
                     }
-                }
+                //}
             }
         }
 

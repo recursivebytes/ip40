@@ -98,7 +98,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="{Binding Host.VisibleStatus, Converter={StaticResource s2b}, Mode=OneWay, FallbackValue=LightGray}" Margin="1" MouseDown="Border_MouseDown" ToolTip="Klick sendet Ping, Doppelklick sendet WOL-Paket">
+                    <Border Background="{Binding Host.VisibleStatus, Converter={StaticResource s2b}, Mode=OneWay, FallbackValue=LightGray}" Margin="1" MouseDown="Border_MouseDown" ToolTip="Klick sendet Ping">
                         <TextBlock Text="{Binding LastOctett, FallbackValue=.254}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         <Border.ContextMenu>
                             <ContextMenu>                                

@@ -138,6 +138,7 @@ namespace ipnfo
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             About a = new About();
+            a.Owner = this;
             a.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             a.ShowDialog();
         }

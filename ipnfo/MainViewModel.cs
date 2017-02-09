@@ -56,7 +56,9 @@ namespace ipnfo
         public HostInformation CurrentSelected
         {
             get { return Get<HostInformation>("CurrentSelected"); }
-            set { Set("CurrentSelected", value); OnPropertyChanged("CurrentSelected"); }
+            set { Set("CurrentSelected", value); 
+                OnPropertyChanged("CurrentSelected");
+            }
         }
 
         /// <summary>
@@ -99,17 +101,18 @@ namespace ipnfo
         public void ChangeClassCNetwork(IPAddress addr)
         {
             //get the class c address of the given IP addr
-            CurrentClassCNetwork = addr;
+           
             byte[] b = addr.GetAddressBytes();
 
-            long start = addr.ToLong(); //start at x.y.z.0
+            long start = addr.ToLong() - b[3]; //start at x.y.z.0
             long end = new IPAddress(new byte[] { b[0], b[1], b[2], 255 }).ToLong(); //end at x.y.z.255
+            CurrentClassCNetwork = start.ToIP();
 
             //grab all known Hosts of this range
             HostInformation[] his = Hosts.Where(w => w.IP >= start && w.IP <= end).ToArray();
 
             //for all IPs of this network...
-            for (int i = 1; i < 255; i++)
+            for (int i = 0; i < 256; i++)
             {                
                 //try to find it in the list of the known Hosts and assign it to the dummy
                 HostInformation hi = his.FirstOrDefault(f => f.IP == start + ClassCDummies[i].LastOctettInt);

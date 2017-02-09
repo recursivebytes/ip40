@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("IP40")]
 [assembly: AssemblyDescription("IPv4 Network Scanner")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("recursivebytes.com")]
-[assembly: AssemblyProduct("ipnfo")]
-[assembly: AssemblyCopyright("Copyright ©  2015-2016")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("ip40")]
+[assembly: AssemblyCopyright("Copyright ©  2015-2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,5 +51,5 @@ using System.Windows;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.21.0.0")]
-[assembly: AssemblyFileVersion("1.21.0.0")]
+[assembly: AssemblyVersion("1.27.0.0")]
+[assembly: AssemblyFileVersion("1.27.0.0")]

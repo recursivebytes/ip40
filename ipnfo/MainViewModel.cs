@@ -477,8 +477,9 @@ namespace ipnfo
 
         
 
-
+        //regex that identifies uninteresting NICs
         Regex nicnameRegex = new Regex(@"(Pseudo|Tunneling)", RegexOptions.Compiled);
+
         /// <summary>
         /// Discover all available Network Interfaces
         /// </summary>
@@ -585,7 +586,7 @@ namespace ipnfo
                 z.ForEach(e => e.Status = HostStatus.Checking);
                 List<Task<HostInformation>> tasks = new List<Task<HostInformation>>();
                 foreach (var t in z)
-                    tasks.Add(CheckHost(t,Config.PortInformation,Config.PingTimeout,Config.PortScan));
+                    tasks.Add(CheckHost(t,Config.PingTimeout));
 
                 //and execute the scan for them
                 Task.WaitAll(tasks.ToArray());
@@ -683,12 +684,10 @@ namespace ipnfo
         /// Performs the individual scan an a Host
         /// </summary>
         /// <param name="hi">The Host to be scanned</param>
-        /// <param name="PortInformation">The ports to be scanned</param>
         /// <param name="PingTimeout">Timeout for Ping</param>
-        /// <param name="PortScan">true, if Ports should be scanned</param>
         /// <param name="elseStatus">Default-Status if not successful (no answer)</param>
         /// <returns></returns>
-        public static async Task<HostInformation> CheckHost(HostInformation hi, List<PortInformation> PortInformation, int PingTimeout, bool PortScan, HostStatus elseStatus = HostStatus.Offline)
+        public static async Task<HostInformation> CheckHost(HostInformation hi,  int PingTimeout, HostStatus elseStatus = HostStatus.Offline)
         {
             try
             {
@@ -710,38 +709,7 @@ namespace ipnfo
                     catch
                     {
 
-                    }
-
-                    //perform the Port scan
-                    if (PortScan)
-                    {
-                        //scan the Ports in parallel to save time.
-                        //TODO: LIMIT TO PRIVATE IP ADDRESS RANGES! or detach the port scan from the IP scan to deal with DoS
-                        Parallel.ForEach(PortInformation, pi =>
-                        {
-                                Parallel.ForEach(pi.Ports, el =>
-                                {
-                                    try
-                                    {
-                                        //try to connect to the port
-                                        var client = new TcpClient();
-                                        var result = client.BeginConnect(target, el, null, null);
-                                        var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
-
-                                        if (success)
-                                        {
-                                            //save information when successful
-                                            client.EndConnect(result);
-                                            hi.OpenPorts.Add(pi);
-                                        }
-                                    }
-                                    catch (SocketException)
-                                    {
-
-                                    }
-                                });
-                        });
-                    }
+                    }                   
                 }
 
                 hi.Pending = false;
@@ -752,25 +720,7 @@ namespace ipnfo
                 return hi;
             }
         }
-
-        /// <summary>
-        /// Opens a Host by a specific service
-        /// </summary>
-        /// <param name="hi"></param>
-        /// <param name="pi"></param>
-        public void CallService(HostInformation hi, PortInformation pi)
-        {
-            switch(pi.Name)
-            {
-                case "HTTP":
-                    Process.Start(string.Format("http://{0}", hi.IP.ToIP()));
-                    break;
-                case "SMB":
-                    Process.Start("explorer.exe", "/e,/root,\\\\" + hi.IP.ToIP());
-                    break;
-            }
-        }
-
+        
         /// <summary>
         /// Sets the Flag to abort the scan
         /// </summary>
@@ -779,10 +729,7 @@ namespace ipnfo
             Stop = true;
         }
 
-
-
-
-
+        
         #region ARP Table
 
         /// <summary>

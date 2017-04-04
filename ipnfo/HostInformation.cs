@@ -23,7 +23,7 @@ namespace ipnfo
         /// </summary>
         public HostInformation()
         {
-            OpenPorts = new List<PortInformation>();
+           
         }
 
         /// <summary>
@@ -31,8 +31,7 @@ namespace ipnfo
         /// </summary>
         /// <param name="ip">IP Address (as a long). Use extensionmethod IPAddress.ToLong() to calculate this value </param>
         public HostInformation(long ip)
-        {
-            OpenPorts = new List<PortInformation>();
+        {            
             IP = ip;
         }
 
@@ -41,8 +40,7 @@ namespace ipnfo
         /// </summary>
         /// <param name="ip"></param>
         public HostInformation(string ip)
-        {
-            OpenPorts = new List<PortInformation>();
+        {           
             IP = IPAddress.Parse(ip).ToLong();
         }
 
@@ -163,18 +161,9 @@ namespace ipnfo
         /// <returns></returns>
         public override string ToString()
         {
-            return Text/*+", "+string.Join("|",OpenPorts.Select(s=>s.ShortName))*/;
+            return Text;
         }
 
-        /// <summary>
-        /// List of open ports (result from portscan)
-        /// </summary>
-        [XmlIgnore]
-        public List<PortInformation> OpenPorts
-        {
-            get { return Get<List<PortInformation>>("OpenPorts"); }
-            set { Set("OpenPorts", value); OnPropertyChanged("OpenPorts"); }
-        }
 
         private ICommand cmdWakeOnLan;
         /// <summary>
@@ -201,30 +190,7 @@ namespace ipnfo
             Task.Run(() => { CheckStatus(1000,10); });
         }
 
-        private ICommand cmdSMB;
-        /// <summary>
-        /// Command that opens the IP in Windows Explorer to view File shares
-        /// </summary>
-        public ICommand SMBCommand
-        {
-            get
-            {
-                if (cmdSMB == null)
-                    cmdSMB = new RelayCommand(p => OnSMB(p), p => CanSMB());
-                return cmdSMB;
-            }
-        }
-
-        private bool CanSMB()
-        {
-            return true;
-        }
-
-        private void OnSMB(object parameter)
-        {
-            Process.Start("explorer.exe", @"\\"+IP.ToIP().ToString());
-        }
-
+      
 
         private ICommand cmdScanIP;
         /// <summary>
@@ -279,7 +245,7 @@ namespace ipnfo
                     await Task.Delay(delay);
 
                 //send ping
-                HostInformation hi = await MainViewModel.CheckHost(this, null, 1000, false, HostStatus.Checking);
+                HostInformation hi = await MainViewModel.CheckHost(this,  1000,  HostStatus.Checking);
 
                 //if successful, more rounds aren't needed
                 if(hi.Status == HostStatus.Online)

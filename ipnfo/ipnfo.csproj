@@ -101,6 +101,7 @@
     <Compile Include="EnumHelper.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GUIType.cs" />
+    <Compile Include="HostStatus.cs" />
     <Compile Include="HostStatusToIconConverter.cs" />
     <Compile Include="InverseBooleanConverter.cs" />
     <Compile Include="LongToIPConverter.cs" />
@@ -109,7 +110,6 @@
     <Compile Include="NIC.cs" />
     <Compile Include="NotNullToVisibilityConverter.cs" />
     <Compile Include="PingToTextConverter.cs" />
-    <Compile Include="PortInformation.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="StatusToBrushConverter.cs" />
     <Compile Include="StatusToTextConverter.cs" />

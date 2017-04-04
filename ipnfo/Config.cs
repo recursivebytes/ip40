@@ -95,16 +95,7 @@ namespace ipnfo
             get { return Get<bool>("AutoStart"); }
             set { Set("AutoStart", value); OnPropertyChanged("AutoStart"); }
         }
-
-        /// <summary>
-        /// If true, Ports will be checked in the scanning process
-        /// </summary>
-        public bool PortScan
-        {
-            get { return Get<bool>("PortScan"); }
-            set { Set("PortScan", value); OnPropertyChanged("PortScan"); }
-        }
-
+        
         /// <summary>
         /// Start IP of Scan Range 
         /// </summary>
@@ -160,7 +151,6 @@ namespace ipnfo
             CheckInternet = true;
             AutoFillRange = true;
             AutoStart = false;
-            PortScan = false;
             ShowClassCView = true;
             ShowSystemInformation = true;
             PingTimeout = 500;
@@ -168,34 +158,7 @@ namespace ipnfo
             IPRangeStart = new IPAddress(new byte[] { 192, 168, 1, 1 }).ToLong();
             IPRangeEnd = new IPAddress(new byte[] { 192, 168, 1, 254 }).ToLong();
             RecentHosts = new List<HostInformation>();
-            PortInformation = new List<PortInformation>();
             GUIType = ipnfo.GUIType.Auto;
-
-            PortInformation.Add(new PortInformation("HTTP", "Webserver", System.Net.Sockets.ProtocolType.Tcp, 80, 8080) { HasService = true });
-            PortInformation.Add(new PortInformation("FTP", "File Transfer Protocol", System.Net.Sockets.ProtocolType.Tcp, 21, 20));
-            PortInformation.Add(new PortInformation("SSH", "Secure Shell", System.Net.Sockets.ProtocolType.Tcp, 22));
-            PortInformation.Add(new PortInformation("Telnet", "Telnet", System.Net.Sockets.ProtocolType.Tcp, 23));
-            //PortInformation.Add(new PortInformation("SMTP", "SMTP", "Simple Mail Transfer Protocol", System.Net.Sockets.ProtocolType.Tcp, 25));
-            //PortInformation.Add(new PortInformation("DNS", "DNS", "DNS-Dienste", System.Net.Sockets.ProtocolType.Tcp, 53));
-            PortInformation.Add(new PortInformation("TFTP", "TFTP", System.Net.Sockets.ProtocolType.Udp, 69));
-            //PortInformation.Add(new PortInformation("POP2", "POP2", "POP2", System.Net.Sockets.ProtocolType.Tcp, 109));
-            //PortInformation.Add(new PortInformation("POP3", "POP3", "POP3", System.Net.Sockets.ProtocolType.Tcp, 110));
-            //PortInformation.Add(new PortInformation("IMAP", "IMAP", "IMAP Protocol", System.Net.Sockets.ProtocolType.Tcp, 143));
-            PortInformation.Add(new PortInformation("SMB", "SMB / Samba Dateifreigaben", System.Net.Sockets.ProtocolType.Tcp, 445) { HasService = true });
-
-
-            PortInformation.Add(new PortInformation("LDAP", "LDAP-Verzeichnisdienst", System.Net.Sockets.ProtocolType.Tcp, 389));
-            //PortInformation.Add(new PortInformation("RIP", "RIP", "Routing-Information Protocol", System.Net.Sockets.ProtocolType.Tcp, 520));
-            PortInformation.Add(new PortInformation("MSSQL", "Microsoft SQL-Datenbankserver", System.Net.Sockets.ProtocolType.Tcp, 1433, 1434));
-            PortInformation.Add(new PortInformation("MySQL", "MySQL-Datenbankserver", System.Net.Sockets.ProtocolType.Tcp, 3306));
-            PortInformation.Add(new PortInformation("PostgreSQL", "Postgre-Datenbankserver", System.Net.Sockets.ProtocolType.Tcp, 5432));
-            PortInformation.Add(new PortInformation("IRC", "Internet Relay Chat", System.Net.Sockets.ProtocolType.Tcp, 196));
-            PortInformation.Add(new PortInformation("FTPS", "FTP über TLS", System.Net.Sockets.ProtocolType.Tcp, 989, 990));
-            // PortInformation.Add(new PortInformation("IMAPS", "IMAPS", "IMAP über TLS", System.Net.Sockets.ProtocolType.Tcp, 993));
-            PortInformation.Add(new PortInformation("RADIUS", "RADIUS Authentifizierung", System.Net.Sockets.ProtocolType.Tcp, 1812, 1813));
-            PortInformation.Add(new PortInformation("SVN", "Subversion", System.Net.Sockets.ProtocolType.Tcp, 3690));
-
-
         }
 
         /// <summary>
@@ -214,17 +177,7 @@ namespace ipnfo
                 s.Serialize(sw, this);
             }            
         }
-
-        /// <summary>
-        /// List of Hosts in this Session. Will not be saved
-        /// </summary>
-        [XmlIgnore]
-        public List<PortInformation> PortInformation
-        {
-            get { return Get<List<PortInformation>>("PortInformation"); }
-            set { Set("PortInformation", value); OnPropertyChanged("PortInformation"); }
-        }
-
+        
         /// <summary>
         /// Loads the config out of it's file if available. If not or error new Instance with default values will be returned. Returns always a valid config
         /// </summary>

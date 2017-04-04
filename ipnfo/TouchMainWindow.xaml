@@ -30,9 +30,6 @@
                     <local:HostStatusToIconConverter x:Key="hs2i" />
                     <local:NotNullToVisibilityConverter x:Key="o2v" />
                     <local:TouchWindowContentSelector x:Key="ContentSelector" />
-                    <Style x:Key="portheader" TargetType="{x:Type GridViewColumnHeader}">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                    </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -57,15 +54,12 @@
             <Button Click="Button_Click_2" ToolTip="Einstellungen">
                 <Canvas  Width="24" Height="24">
                     <Path Width="24" Height="24"  Stretch="Fill" Fill="White" Data="F1 M 38,23.5C 38.8643,23.5 39.7109,23.5756 40.5337,23.7206L 42.6275,18.5381L 48.1901,20.787L 46.0964,25.9692C 47.6473,27.0149 48.9851,28.3527 50.0308,29.9036L 55.213,27.8099L 57.4619,33.3725L 52.2794,35.4664C 52.4244,36.2891 52.5,37.1357 52.5,38C 52.5,38.8643 52.4244,39.7109 52.2794,40.5337L 57.4619,42.6275L 55.213,48.1901L 50.0308,46.0964C 49.0795,47.5073 47.8865,48.7418 46.5112,49.7405L 48.7844,54.8462L 43.3041,57.2891L 41.0307,52.1828C 40.0533,52.3906 39.0394,52.5 38,52.5C 37.1357,52.5 36.2891,52.4244 35.4664,52.2794L 33.3725,57.462L 27.8099,55.213L 29.9036,50.0309C 28.3527,48.9851 27.0149,47.6473 25.9691,46.0964L 20.787,48.1901L 18.538,42.6275L 23.7206,40.5336C 23.5756,39.7109 23.5,38.8643 23.5,38C 23.5,37.1357 23.5756,36.2891 23.7206,35.4664L 18.538,33.3725L 20.787,27.8099L 25.9691,29.9036C 26.9205,28.4927 28.1135,27.2582 29.4889,26.2594L 27.2157,21.1537L 32.6959,18.7109L 34.9694,23.8172C 35.9468,23.6094 36.9606,23.5 38,23.5 Z M 38,28C 32.4771,28 28,32.4772 28,38C 28,43.5229 32.4771,48 38,48C 43.5228,48 48,43.5229 48,38C 48,32.4772 43.5228,28 38,28 Z "/>
-                    <!--<Rectangle Fill="#01FFFFFF" />-->
                 </Canvas>
-
             </Button>
         </mm:WindowCommands>
     </mm:MetroWindow.LeftWindowCommands>
     <mm:MetroWindow.RightWindowCommands>
         <mm:WindowCommands>
-            <ComboBox Visibility="Collapsed" IsEnabled="{Binding IsAnalyzing, Converter={StaticResource ib}}" SelectedIndex="0" ItemsSource="{Binding NICs}" Width="150" SelectedItem="{Binding CurrentNIC, Mode=OneWayToSource}"  />
             <TextBlock Text="Von " VerticalAlignment="Center" Margin="3,0,3,0" />
 
             <TextBox Background="Transparent" FontWeight="Bold" Foreground="White"  HorizontalContentAlignment="Center" BorderThickness="0" IsEnabled="{Binding IsAnalyzing, Converter={StaticResource ib}}" Text="{Binding Config.IPRangeStart, Converter={StaticResource l2ip}}" Width="110" VerticalAlignment="Center" />
@@ -193,15 +187,6 @@
                                                                     </MultiBinding>
                                                                 </TextBlock.Text>
                                                             </TextBlock>
-                                                            <!--<Button Grid.Row="2" Command="{Binding ScanIPCommand}" ToolTip="Checke Status"  >
-                                                                <Button.Content>
-                                                                    <Path Width="18" Height="18"  Stretch="Uniform" Fill="Red" Data="F1 M 42.5,22C 49.4036,22 55,27.5964 55,34.5C 55,41.4036 49.4036,47 42.5,47C 40.1356,47 37.9245,46.3435 36,45.2426L 26.9749,54.2678C 25.8033,55.4393 23.9038,55.4393 22.7322,54.2678C 21.5607,53.0962 21.5607,51.1967 22.7322,50.0251L 31.7971,40.961C 30.6565,39.0755 30,36.8644 30,34.5C 30,27.5964 35.5964,22 42.5,22 Z M 42.5,26C 37.8056,26 34,29.8056 34,34.5C 34,39.1944 37.8056,43 42.5,43C 47.1944,43 51,39.1944 51,34.5C 51,29.8056 47.1944,26 42.5,26 Z ">
-                                                                        <Path.Effect>
-                                                                            <DropShadowEffect ShadowDepth="0" BlurRadius="3" Color="DarkRed" />
-                                                                        </Path.Effect>
-                                                                    </Path>
-                                                                </Button.Content>
-                                                            </Button>-->
                                                             <Button Grid.Row="3" Command="{Binding WakeOnLanCommand}" ToolTip="Sende Wake-On-LAN Paket" Visibility="{Binding CanWOL, Converter={StaticResource b2v}}"  >
                                                                 <Button.Content>
                                                                     <Path Data="M20,10 A25,25 180 1 0 42,10 L42,20 A16,17 180 1 1 20,20  M27,5 L27,35 L35,35 L35,5" Stretch="Uniform" >
@@ -217,8 +202,6 @@
                                                                     </Path>
                                                                 </Button.Content>
                                                             </Button>
-
-                                                            <Button Content="Port-Scan"  Grid.Row="4" Style="{StaticResource MetroFlatButton}" Visibility="Collapsed" />
                                                             <Button Grid.Row="0" Click="Button_Click_3" Style="{StaticResource MetroFlatButton}" >
                                                                 <Button.Content>
                                                                     <Path Data="M0,0 L8,8 M0,8 L8,0" Stretch="Uniform" StrokeThickness="2" Stroke="Black"/>
@@ -228,10 +211,8 @@
 
 
                                                         <Image />
-                                                        <TextBlock  FontSize="24" FontWeight="Bold" Grid.Row="0" Grid.Column="1" Margin="0,0,5,0">
-                                                            <!--<Hyperlink Command="{Binding SMBCommand}">-->
-                                                                <TextBlock Text="{Binding IP, Converter={StaticResource l2ip}}" />
-                                                            <!--</Hyperlink>-->
+                                                        <TextBlock  FontSize="24" FontWeight="Bold" Grid.Row="0" Grid.Column="1" Margin="0,0,5,0">                                                          
+                                                                <TextBlock Text="{Binding IP, Converter={StaticResource l2ip}}" />                                                          
                                                         </TextBlock>
 
                                                         <Image Grid.Row="2" Margin="5,0,0,0"  />
@@ -239,25 +220,9 @@
 
                                                         <Image Grid.Row="3" Margin="5,0,0,0"  />
                                                         <TextBlock Text="{Binding MAC, Converter={StaticResource m2s}}" FontSize="24" local:TextBlockHelper.CopyOnClick="true" FontWeight="Bold" Grid.Row="3" Grid.Column="1" Margin="0,0,20,0" />
-
-                                                        <ListView Grid.Row="4" MinHeight="0" Grid.ColumnSpan="3" MaxHeight="300" ItemsSource="{Binding OpenPorts}" Visibility="Collapsed">
-                                                            <ListView.View>
-                                                                <GridView ColumnHeaderContainerStyle="{StaticResource portheader}" >
-                                                                    <GridViewColumn DisplayMemberBinding="{Binding Name}" />
-                                                                    <GridViewColumn DisplayMemberBinding="{Binding Description}" />
-                                                                </GridView>
-                                                            </ListView.View>
-                                                        </ListView>
-
                                                     </Grid>
-
                                                 </Grid>
                                             </Border>
-
-
-
-
-
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -338,26 +303,6 @@
                                                             </DataTemplate>
                                                         </GridViewColumn.CellTemplate>
                                                     </GridViewColumn>
-                                                    <!--<GridViewColumn Header="Dienste / geöffnete Ports" Width="300">
-                                                        <GridViewColumn.CellTemplate>
-                                                            <DataTemplate>
-                                                                <ItemsControl ItemsSource="{Binding OpenPorts}">
-                                                                    <ItemsControl.ItemsPanel>
-                                                                        <ItemsPanelTemplate>
-                                                                            <StackPanel Orientation="Horizontal" />
-                                                                        </ItemsPanelTemplate>
-                                                                    </ItemsControl.ItemsPanel>
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <Border Background="LightGreen" Margin="4,0,4,0" Cursor="{Binding HasService,Converter={StaticResource b2c}}"  Tag="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}">
-                                                                                <TextBlock Text="{Binding Name}" FontSize="16" />
-                                                                            </Border>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                            </DataTemplate>
-                                                        </GridViewColumn.CellTemplate>
-                                                    </GridViewColumn>-->
                                                 </GridView>
                                             </ListView.View>
                                         </ListView>
@@ -390,13 +335,7 @@
                                                 </StackPanel>
                                                 <CheckBox FontSize="24" Content="Zeige Klasse-C-Netz Ansicht" IsChecked="{Binding Config.ShowClassCView}" Name="showccn" />
                                                 <CheckBox FontSize="24" Content="Zeige Netzwerkinformationen" IsChecked="{Binding Config.ShowSystemInformation}" Name="showgeneral" />
-                                                <CheckBox FontSize="24" Content="Starte Scan bei Programmstart" IsChecked="{Binding Config.AutoStart}" Visibility="Collapsed" />
                                                 <CheckBox FontSize="24" Content="Bei Interface-Wechsel Adressbereich übernehmen" IsChecked="{Binding Config.AutoFillRange}"  />
-                                                <StackPanel Orientation="Horizontal" >
-                                                    <CheckBox FontSize="24" Content="Port-Scan" VerticalAlignment="Center" IsChecked="{Binding Config.PortScan}" Visibility="Collapsed" />
-                                                    <Button FontSize="24" Content="Einstellungen" Margin="5,0,0,0" IsEnabled="False" Visibility="Collapsed" />
-                                                </StackPanel>
-
                                                 <CheckBox FontSize="24" Content="Klasse-C-Netz Ansicht automatisch umblättern" IsChecked="{Binding Config.AutoScroll}"/>
                                                 <CheckBox FontSize="24" Content="Internet-Erreichbarkeit prüfen" IsChecked="{Binding Config.CheckInternet}"  />
                                                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
@@ -412,26 +351,7 @@
                                                         <TextBlock FontSize="24" Text="Benutzeroberfläche: " />
                                                         <ComboBox  Margin="10,0,0,0" FontSize="24" SelectedItem="{Binding Config.GUIType}" Width="150"  local:EnumHelper.Enum="{x:Type local:GUIType}" />
                                                     </StackPanel>
-                                                    <Button FontSize="24" Content="Hilfe" Margin="3" IsEnabled="False" Visibility="Collapsed"/>
-                                                    <Button FontSize="24" Content="Check for Updates" Margin="3" IsEnabled="False" Visibility="Collapsed" />
                                                 </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Button Visibility="Collapsed" Grid.Column="0" Margin="2" ToolTip="Bekannte Rechner aus Verlauf löschen" Command="{Binding ClearRecentHostsCommand}">
-                                                        <Button.Content>
-                                                            <StackPanel Orientation="Horizontal">
-                                                                <TextBlock Text="Verlauf leeren" />
-                                                            </StackPanel>
-                                                        </Button.Content>
-                                                    </Button>
-                                                    <Button Grid.Column="0" Margin="10,2,2,2" Visibility="Collapsed" ToolTip="Über IP40" Click="Button_Click">
-                                                        <Button.Content>
-                                                            <StackPanel Orientation="Horizontal">
-                                                                <TextBlock FontSize="24" Text="Über..." />
-                                                            </StackPanel>
-                                                        </Button.Content>
-                                                    </Button>
-                                                </StackPanel>
-
                                                 <StackPanel Margin="0,40,0,0">
                                                     <TextBlock Text="Über..." FontSize="30" FontWeight="Bold" />
                                                     <Rectangle Height="2" Width="{Binding ActualWidth}"  Margin="5,0,5,30" >
@@ -468,18 +388,14 @@
                                                                     <RowDefinition Height="auto" />
                                                                 </Grid.RowDefinitions>
                                                                 <TextBlock Text="Version:" />
-                                                                <TextBlock Grid.Column="1" Name="version" Loaded="version_Loaded" />
+                                                                <TextBlock Grid.Column="1" Text="{Binding Source={x:Static local:App.Version}, Mode=OneWay}" />
                                                                 <TextBlock Text="Datum:" Grid.Row="1" />
-                                                                <TextBlock Grid.Column="1" Grid.Row="1" Name="date" Loaded="date_Loaded" />
+                                                                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Source={x:Static local:App.CompileDate},Mode=OneWay}" />
                                                                 <TextBlock Text="Entwickler:" Grid.Row="2" />
-                                                                <TextBlock Grid.Column="1" Grid.Row="2">
-                    <!--<Hyperlink TargetName="http://ip40.recursivebytes.com" Click="Hyperlink_Click"></Hyperlink>-->
-                                                                    Stefan T.
-                                                                </TextBlock>
+                                                                <TextBlock Grid.Column="1" Grid.Row="2">Stefan T.</TextBlock>
                                                                 <TextBlock Text="Lizenz:" Grid.Row="3" />
                                                                 <TextBlock Grid.Column="1" Grid.Row="3" Text="MIT" />
                                                             </Grid>
-
                                                         </StackPanel>
                                                     </Grid>
                                                 </StackPanel>
@@ -492,32 +408,6 @@
                     </DataTemplate.Triggers>
                 </DataTemplate>
             </ContentControl.ContentTemplate>
-            <!--<ContentControl.ContentTemplateSelector>
-                <local:TouchWindowContentSelector>
-                    <local:TouchWindowContentSelector.GridTemplate>
-                        <DataTemplate>
-                        
-                        </DataTemplate>
-                    </local:TouchWindowContentSelector.GridTemplate>
-                    <local:TouchWindowContentSelector.ListTemplate>
-                        <DataTemplate>
-                            
-                        </DataTemplate>
-                    </local:TouchWindowContentSelector.ListTemplate>
-                    <local:TouchWindowContentSelector.OptionsTemplate>
-                        <DataTemplate>
-                            <Grid />
-                        </DataTemplate>
-                    </local:TouchWindowContentSelector.OptionsTemplate>
-                </local:TouchWindowContentSelector>
-            </ContentControl.ContentTemplateSelector>     -->
         </ContentControl>
-        <!-- <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1" Margin="5">
-           
-        </StackPanel>
-        <Grid Grid.Row="2">
-            <ProgressBar Value="100" MinHeight="15" />
-            <TextBlock Text="50%" HorizontalAlignment="Center" />
-        </Grid>-->
     </Grid>
 </mm:MetroWindow>

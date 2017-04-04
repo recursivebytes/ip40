@@ -32,10 +32,10 @@ namespace ipnfo
         public MainWindow()
         {
 
-            
+
             InitializeComponent();
             DataContextChanged += MainWindow_DataContextChanged;
-           
+
         }
 
         #region Sorting
@@ -68,7 +68,7 @@ namespace ipnfo
                         }
                     }
 
-                    string header = headerClicked.Column.Header as string;                  
+                    string header = headerClicked.Column.Header as string;
                     Sort(header, direction);
 
                     if (direction == ListSortDirection.Ascending)
@@ -107,7 +107,7 @@ namespace ipnfo
             catch { }
         }
 
-#endregion
+        #endregion
 
 
         void MainWindow_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -120,7 +120,7 @@ namespace ipnfo
             if (m != null)
             {
                 m.FireAllPropertiesChanged();
-            }    
+            }
         }
 
         void mvm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -145,35 +145,30 @@ namespace ipnfo
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if(DataContext!=null)
-            ((MainViewModel)DataContext).Config.Save();
+            if (DataContext != null)
+                ((MainViewModel)DataContext).Config.Save();
         }
 
-        private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Border b = (Border)sender;
-            ((MainViewModel)DataContext).CallService((HostInformation)b.Tag, (PortInformation)b.DataContext);
-        }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-             Process.Start("explorer.exe", "::{7007ACC7-3202-11D1-AAD2-00805FC1270E}");            
+            Process.Start("explorer.exe", "::{7007ACC7-3202-11D1-AAD2-00805FC1270E}");
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            string mmc = Environment.GetFolderPath(Environment.SpecialFolder.Windows)+"\\System32\\"+Thread.CurrentThread.CurrentCulture.ToString()+"\\WF.msc";
+            string mmc = Environment.GetFolderPath(Environment.SpecialFolder.Windows) + "\\System32\\" + Thread.CurrentThread.CurrentCulture.ToString() + "\\WF.msc";
             Process.Start(mmc);
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            Process.Start("control.exe", "/name Microsoft.NetworkAndSharingCenter");            
+            Process.Start("control.exe", "/name Microsoft.NetworkAndSharingCenter");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-                    
+
         }
 
         /// <summary>
@@ -205,44 +200,22 @@ namespace ipnfo
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                /*if (e.ClickCount > 1)
+                HostDummy hd = ((FrameworkElement)sender).DataContext as HostDummy;
+                if (hd != null)
                 {
-                    HostDummy hd = ((FrameworkElement)sender).DataContext as HostDummy;
-                    if (hd != null)
+                    if (hd.Host == null)
                     {
-                        if (hd.Host == null)
-                        {
-                            HostInformation hi = new HostInformation(((MainViewModel)DataContext).CurrentClassCNetwork.ToLong() + (long)hd.LastOctettInt);
-                            hd.Host = hi;
-                        }
-
-                        if (hd.Host != null)
-                        {
-                            if(hd.Host.WakeOnLanCommand.CanExecute(null))
-                                hd.Host.WakeOnLanCommand.Execute(null);
-                        }
+                        HostInformation hi = new HostInformation(((MainViewModel)DataContext).CurrentClassCNetwork.ToLong() + (long)hd.LastOctettInt);
+                        hd.Host = hi;
                     }
-                }*/
-                //else
-                //{
-                    HostDummy hd = ((FrameworkElement)sender).DataContext as HostDummy;
-                    if (hd != null)
+
+                    if (hd.Host != null)
                     {
-                        if (hd.Host == null)
-                        {
-                            HostInformation hi = new HostInformation(((MainViewModel)DataContext).CurrentClassCNetwork.ToLong() + (long)hd.LastOctettInt);
-                            hd.Host = hi;
-                        }
-
-                        if (hd.Host != null)
-                        {
-                            hd.Host.ScanIPCommand.Execute(null);
-                        }
+                        hd.Host.ScanIPCommand.Execute(null);
                     }
-                //}
+                }
             }
         }
 

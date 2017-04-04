@@ -63,11 +63,6 @@ namespace ipnfo
                 ((MainViewModel)DataContext).View = TouchView.Options;
         }
 
-        private void Hyperlink_Click(object sender, RoutedEventArgs e)
-        {
-            Hyperlink h = (Hyperlink)sender;
-            Process.Start(h.TargetName);
-        }
 
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -97,30 +92,11 @@ namespace ipnfo
                 ((MainViewModel)DataContext).CurrentSelected.ScanIPCommand.Execute(null);
             }
         }
-
-
+        
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ((MainViewModel)DataContext).FillRange();
             ((MainViewModel)DataContext).ChangeClassCNetwork(((MainViewModel)DataContext).Config.IPRangeStart.ToIP());
-        }
-
-        private void version_Loaded(object sender, RoutedEventArgs e)
-        {
-            TextBlock b = sender as TextBlock;
-            if(b!=null)
-            {
-                b.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString(2) + " Beta";
-            }
-        }
-
-        private void date_Loaded(object sender, RoutedEventArgs e)
-        {
-            TextBlock b = sender as TextBlock;
-            if (b != null)
-            {
-                b.Text = About.RetrieveLinkerTimestamp().ToString("dd.MM.yyyy");
-            }
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)

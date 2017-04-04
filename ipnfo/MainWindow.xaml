@@ -78,12 +78,11 @@
                 <TextBlock Text="Internet: " Grid.Column="4" Grid.Row="3" />
                 <TextBlock HorizontalAlignment="Left" Text="{Binding InternetStatus, Converter={StaticResource s2t}}" Background="{Binding InternetStatus, Converter={StaticResource s2b}}" Grid.Column="5" Grid.Row="3" />
 
-                
+
             </Grid>
         </Grid>
         <Grid Grid.Row="1" Visibility="{Binding ElementName=showccn, Path=IsChecked, Converter={StaticResource b2v}}">
-            <StackPanel Orientation="Horizontal" Margin="5,5,5,2" HorizontalAlignment="Center">
-                <TextBlock Text="Ansicht: " Visibility="Collapsed" />
+            <StackPanel Orientation="Horizontal" Margin="5,5,5,2" HorizontalAlignment="Center">               
                 <Button Content="&lt;" Width="20" Command="{Binding PreviousClassCNetworkCommand}" />
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0,5,0" Text="{Binding CurrentClassCNetwork, Mode=OneWay}" Width="100"></TextBlock>
                 <Button Content="&gt;" Width="20" Command="{Binding NextClassCNetworkCommand}" />
@@ -101,21 +100,18 @@
                     <Border Background="{Binding Host.VisibleStatus, Converter={StaticResource s2b}, Mode=OneWay, FallbackValue=LightGray}" Margin="1" MouseDown="Border_MouseDown" ToolTip="Klick sendet Ping">
                         <TextBlock Text="{Binding LastOctett, FallbackValue=.254}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         <Border.ContextMenu>
-                            <ContextMenu>                                
+                            <ContextMenu>
                                 <MenuItem Header="Kopiere IP" Click="CopyText" Name="ip" />
                                 <MenuItem Header="Kopiere MAC-Adresse" Click="CopyText" Name="mac" />
                                 <MenuItem Header="Kopiere Hostname" Click="CopyText" Name="host" />
                                 <Separator />
                                 <MenuItem Header="Sende WOL-Paket" Command="{Binding Host.WakeOnLanCommand}" />
-                                <MenuItem Header="Öffne in Explorer" Command="{Binding Host.SMBCommand}" Visibility="Collapsed">
-                                    
-                                </MenuItem>
                             </ContextMenu>
                         </Border.ContextMenu>
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
-        </ItemsControl>       
+        </ItemsControl>
         <Grid Grid.Row="3">
             <ListView ItemsSource="{Binding HostsOnline}" Name="lv" GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler">
                 <ListView.View>
@@ -124,9 +120,9 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                    <Ellipse Width="12" Height="12" Style="{Binding VisibleStatus,Converter={StaticResource hs2i}}" />
-                                    <Button Visibility="{Binding CanWOL,Converter={StaticResource b2v}}" Command="{Binding WakeOnLanCommand}" Height="24" Width="24">
-                                        <Button.Template>
+                                        <Ellipse Width="12" Height="12" Style="{Binding VisibleStatus,Converter={StaticResource hs2i}}" />
+                                        <Button Visibility="{Binding CanWOL,Converter={StaticResource b2v}}" Command="{Binding WakeOnLanCommand}" Height="24" Width="24">
+                                            <Button.Template>
                                                 <ControlTemplate>
                                                     <Path Data="M20,10 A25,25 180 1 0 42,10 L42,20 A16,17 180 1 1 20,20  M27,5 L27,35 L35,35 L35,5" Stretch="Uniform" Margin="4">
                                                         <Path.Fill>
@@ -141,7 +137,7 @@
                                                     </Path>
                                                 </ControlTemplate>
                                             </Button.Template>
-                                    </Button>
+                                        </Button>
                                     </StackPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
@@ -183,26 +179,6 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <!--<GridViewColumn Header="Dienste / geöffnete Ports" Width="300">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ItemsControl ItemsSource="{Binding OpenPorts}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Horizontal" />
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border Background="LightGreen" Margin="4,0,4,0" Cursor="{Binding HasService,Converter={StaticResource b2c}}" MouseLeftButtonDown="Border_MouseLeftButtonDown" Tag="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListViewItem}}}">
-                                                    <TextBlock Text="{Binding Name}" />
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>-->
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -221,18 +197,12 @@
                     <StackPanel>
                         <CheckBox Content="Zeige Klasse-C-Netz Ansicht" IsChecked="{Binding Config.ShowClassCView}" Name="showccn" />
                         <CheckBox Content="Zeige Netzwerkinformationen" IsChecked="{Binding Config.ShowSystemInformation}" Name="showgeneral" />
-                        <CheckBox Content="Starte Scan bei Programmstart" IsChecked="{Binding Config.AutoStart}" Visibility="Collapsed" />
-                        <CheckBox Content="Bei Interface-Wechsel Adressbereich übernehmen" IsChecked="{Binding Config.AutoFillRange}"  />
-                        <StackPanel Orientation="Horizontal" Visibility="Collapsed" >
-                            <CheckBox Content="Port-Scan" VerticalAlignment="Center" IsChecked="{Binding Config.PortScan}" />
-                            <Button Content="Einstellungen" Margin="5,0,0,0" IsEnabled="False" Visibility="Collapsed" />
-                        </StackPanel>
+                        <CheckBox Content="Bei Interface-Wechsel Adressbereich übernehmen" IsChecked="{Binding Config.AutoFillRange}"  />                        
                         <CheckBox Content="Klasse-C-Netz Ansicht automatisch umblättern" IsChecked="{Binding Config.AutoScroll}"/>
                         <CheckBox Content="Internet-Erreichbarkeit prüfen" IsChecked="{Binding Config.CheckInternet}"  />
 
                     </StackPanel>
                     <StackPanel Grid.Column="1">
-                        
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Max. parallele Verbindungen: " />
                             <xctk:IntegerUpDown Minimum="1" Maximum="99" Value="{Binding Config.MaxParallelConnections}" />
@@ -240,47 +210,27 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Ping-Timeout (ms): " />
                             <xctk:IntegerUpDown Minimum="1" Width="60"  Value="{Binding Config.PingTimeout}" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" >
-                            <Button Content="Hilfe" Margin="3" IsEnabled="False" Visibility="Collapsed"/>
-                            
-                            <Button Content="Check for Updates" Margin="3" IsEnabled="False" Visibility="Collapsed" />
-                        </StackPanel>
-                        <!--<StackPanel Orientation="Horizontal" >
-                            <TextBlock Text="Scan-Methode:" />
-                            <RadioButton Content="ICMP (Ping)" IsChecked="{Binding Config.UseICMP}" GroupName="method" />
-                            <RadioButton Content="ARP-Tabelle" IsChecked="{Binding Config.UseICMP,Converter={StaticResource ib}}"  GroupName="method"/>
-                        </StackPanel>-->
+                        </StackPanel>                       
                         <StackPanel Orientation="Horizontal">                           
-                            <Button Visibility="Collapsed" Grid.Column="0" Margin="2" ToolTip="Bekannte Rechner aus Verlauf löschen" Command="{Binding ClearRecentHostsCommand}">
-                                <Button.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Verlauf leeren" />
-                                    </StackPanel>
-                                </Button.Content>
-                            </Button>
-                            
+
                             <TextBlock Text="Benutzeroberfläche: " />
                             <ComboBox SelectedItem="{Binding Config.GUIType}"  SelectedIndex="0" local:EnumHelper.Enum="{x:Type local:GUIType}">
-                                
-                            </ComboBox>                            
+
+                            </ComboBox>
                         </StackPanel>
                         <Button Grid.Column="0" Width="80" HorizontalAlignment="Left" Margin="1" ToolTip="Über IP40" Click="Button_Click">
-                                <Button.Content>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Über..." />
-                                    </StackPanel>
-                                </Button.Content>
-                            </Button>
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Über..." />
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
                     </StackPanel>
-                    
                 </Grid>
-
             </Expander>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,2,5,2">
                 <ComboBox  IsEnabled="{Binding IsAnalyzing, Converter={StaticResource ib}}" SelectedIndex="0" ItemsSource="{Binding NICs}" Width="150" SelectedItem="{Binding CurrentNIC, Mode=OneWayToSource}" SelectionChanged="ComboBox_SelectionChanged" />
                 <TextBlock Text="Von " VerticalAlignment="Center" Margin="3,0,3,0" />
-
                 <TextBox IsEnabled="{Binding IsAnalyzing, Converter={StaticResource ib}}" Text="{Binding Config.IPRangeStart, Converter={StaticResource l2ip}}" Width="100" VerticalAlignment="Center" />
                 <TextBlock Text="bis" VerticalAlignment="Center" Margin="3,0,3,0"/>
                 <TextBox IsEnabled="{Binding IsAnalyzing, Converter={StaticResource ib}}" Text="{Binding Config.IPRangeEnd, Converter={StaticResource l2ip}}" Width="100" VerticalAlignment="Center"  />
@@ -290,7 +240,6 @@
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />
-                    <!--<ColumnDefinition Width="*" />-->
                 </Grid.ColumnDefinitions>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -302,12 +251,11 @@
                     </Grid.ColumnDefinitions>
                     <ProgressBar Height="18" Minimum="0" Maximum="100" Value="{Binding ScanProgress}" Margin="2,0,2,0" Grid.Column="1" />
                     <TextBlock Text="{Binding ScanProgress,StringFormat={}{0:#}%,FallbackValue=0%}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1" />
-
                     <Button Grid.Column="2" Margin="2" ToolTip="Adaptereinstellungen öffnen" Click="Button_Click_1">
                         <Button.Content>
-                            <StackPanel Orientation="Horizontal">                                
+                            <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Adapter" />
-                            </StackPanel>                            
+                            </StackPanel>
                         </Button.Content>
                     </Button>
                     <Button Grid.Column="3" Margin="2" ToolTip="Windows Firewalleinstellungen öffnen" Click="Button_Click_2">
@@ -324,10 +272,7 @@
                             </StackPanel>
                         </Button.Content>
                     </Button>
-                    
-                </Grid>                
-                
-                <!--<TextBlock Text="Scanning 192.168.1.14 - .255" Margin="5,0,5,0" Grid.Column="1" />-->
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

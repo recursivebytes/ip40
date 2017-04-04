@@ -1,0 +1,41 @@
+﻿<Window x:Class="ip40.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:local="clr-namespace:ip40"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" 
+        Title="Über IP40" Height="260" Width="260">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="89*"/>
+            <ColumnDefinition Width="265*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="3*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.ColumnSpan="2">
+            <Image Source="Icons/logo.png" Width="128" Height="128" />
+            <Grid HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" MinWidth="100" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Version:" />
+                <TextBlock Grid.Column="1" Text="{Binding Source={x:Static local:App.Version},Mode=OneWay}" />
+                <TextBlock Text="Datum:" Grid.Row="1" />
+                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding Source={x:Static local:App.CompileDate}, Mode=OneWay}"/>
+                <TextBlock Text="Entwickler:" Grid.Row="2" />
+                <TextBlock Text="Stefan T." Grid.Row="2" Grid.Column="1" />
+                <TextBlock Text="Lizenz:" Grid.Row="3" />
+                <TextBlock Grid.Column="1" Grid.Row="3" Text="MIT" />
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>

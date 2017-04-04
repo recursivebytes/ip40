@@ -284,7 +284,7 @@
                 <TextBox IsEnabled="{Binding IsAnalyzing, Converter={StaticResource ib}}" Text="{Binding Config.IPRangeStart, Converter={StaticResource l2ip}}" Width="100" VerticalAlignment="Center" />
                 <TextBlock Text="bis" VerticalAlignment="Center" Margin="3,0,3,0"/>
                 <TextBox IsEnabled="{Binding IsAnalyzing, Converter={StaticResource ib}}" Text="{Binding Config.IPRangeEnd, Converter={StaticResource l2ip}}" Width="100" VerticalAlignment="Center"  />
-                <Button Margin="3,0,0,0" Content="{Binding StartStopButtonText}" MinWidth="50" Command="{Binding StartStopCommand}" />
+                <Button Margin="3,0,0,0" Content="{Binding StartStopButtonText, FallbackValue=Scannen}" MinWidth="50" Command="{Binding StartStopCommand}" />
             </StackPanel>
 
             <Grid Grid.Row="1">

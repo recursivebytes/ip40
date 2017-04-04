@@ -36,9 +36,7 @@
                     <Hyperlink TargetName="http://ip40.recursivebytes.com" Click="Hyperlink_Click">Stefan T.</Hyperlink>
                 </TextBlock>-->
                 <TextBlock Text="Lizenz:" Grid.Row="3" />
-                <TextBlock Grid.Column="1" Grid.Row="3">
-                    <Hyperlink TargetName="http://opensource.org/licenses/MIT" Click="Hyperlink_Click">MIT</Hyperlink>
-                </TextBlock>
+                <TextBlock Grid.Column="1" Grid.Row="3" Text="MIT" />
 
             </Grid>
 

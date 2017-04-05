@@ -62,19 +62,19 @@ namespace ip40
             }    
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ListView_Click(object sender, RoutedEventArgs e)
         {
             if (DataContext != null)
                 ((MainViewModel)DataContext).View = TouchView.List;
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void GridView_Click(object sender, RoutedEventArgs e)
         {
             if (DataContext != null)
                 ((MainViewModel)DataContext).View = TouchView.Grid;
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void Settings_Click(object sender, RoutedEventArgs e)
         {
             if (DataContext != null)
                 ((MainViewModel)DataContext).View = TouchView.Options;
@@ -116,15 +116,12 @@ namespace ip40
             ((MainViewModel)DataContext).ChangeClassCNetwork(((MainViewModel)DataContext).Config.IPRangeStart.ToIP());
         }
 
-        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            
-        }
 
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
             Process.Start("http://gnu.org/licenses");
         }
+
 
     }
 

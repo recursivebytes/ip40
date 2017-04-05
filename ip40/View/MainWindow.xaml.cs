@@ -183,10 +183,6 @@ namespace ip40
             Process.Start("control.exe", "/name Microsoft.NetworkAndSharingCenter");
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         /// <summary>
         /// ClickHandler for the Copy-MenuItems. Copies Information to the clipboard

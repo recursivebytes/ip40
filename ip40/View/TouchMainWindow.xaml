@@ -3,7 +3,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Loaded="MetroWindow_Loaded"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" Closing="MetroWindow_Closing"
-        xmlns:local="clr-namespace:ip40" Icon="Icons/logo2.png" 
+        xmlns:local="clr-namespace:ip40" Icon="../Icons/logo2.png" 
         Title="IP40" Height="800" Width="900" MinWidth="700" MinHeight="700">
     <mm:MetroWindow.Resources>
         <ResourceDictionary>
@@ -372,7 +372,7 @@
                                                                 <Setter Property="FontSize" Value="18" />
                                                             </Style>
                                                         </Grid.Resources>
-                                                        <Image Source="Icons/logo.png" Width="128" Height="128" Margin="0,5,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                                        <Image Source="../Icons/logo.png" Width="128" Height="128" Margin="0,5,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                                         <StackPanel Grid.Column="1">
                                                             <Grid HorizontalAlignment="Center">
                                                                 <Grid.ColumnDefinitions>

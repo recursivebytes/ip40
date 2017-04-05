@@ -13,7 +13,7 @@
             <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.ColumnSpan="2">
-            <Image Source="Icons/logo.png" Width="128" Height="128" />
+            <Image Source="../Icons/logo.png" Width="128" Height="128" />
             <Grid HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" MinWidth="100" />

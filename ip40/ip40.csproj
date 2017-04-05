@@ -92,33 +92,33 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="About.xaml.cs">
+    <Compile Include="View\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BooleanToTextConverter.cs" />
-    <Compile Include="BoolToCursorConverter.cs" />
+    <Compile Include="Converter\BooleanToTextConverter.cs" />
+    <Compile Include="Converter\BoolToCursorConverter.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="EnumHelper.cs" />
+    <Compile Include="View\EnumHelper.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="GUIType.cs" />
     <Compile Include="HostStatus.cs" />
-    <Compile Include="HostStatusToIconConverter.cs" />
-    <Compile Include="InverseBooleanConverter.cs" />
-    <Compile Include="LongToIPConverter.cs" />
-    <Compile Include="LongToSpeedConverter.cs" />
-    <Compile Include="MACToStringConverter.cs" />
+    <Compile Include="Converter\HostStatusToIconConverter.cs" />
+    <Compile Include="Converter\InverseBooleanConverter.cs" />
+    <Compile Include="Converter\LongToIPConverter.cs" />
+    <Compile Include="Converter\LongToSpeedConverter.cs" />
+    <Compile Include="Converter\MACToStringConverter.cs" />
     <Compile Include="NIC.cs" />
-    <Compile Include="NotNullToVisibilityConverter.cs" />
-    <Compile Include="PingToTextConverter.cs" />
+    <Compile Include="Converter\NotNullToVisibilityConverter.cs" />
+    <Compile Include="Converter\PingToTextConverter.cs" />
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="StatusToBrushConverter.cs" />
-    <Compile Include="StatusToTextConverter.cs" />
-    <Compile Include="TextBlockHelper.cs" />
-    <Compile Include="TouchMainWindow.xaml.cs">
+    <Compile Include="Converter\StatusToBrushConverter.cs" />
+    <Compile Include="Converter\StatusToTextConverter.cs" />
+    <Compile Include="View\TextBlockHelper.cs" />
+    <Compile Include="View\TouchMainWindow.xaml.cs">
       <DependentUpon>TouchMainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TouchWindowContentSelector.cs" />
-    <Page Include="About.xaml">
+    <Compile Include="View\TouchWindowContentSelector.cs" />
+    <Page Include="View\About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -126,7 +126,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -137,11 +137,11 @@
     <Compile Include="HostInformation.cs" />
     <Compile Include="HostDummy.cs" />
     <Compile Include="MainViewModel.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="TouchMainWindow.xaml">
+    <Page Include="View\TouchMainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -187,6 +187,7 @@
   <ItemGroup>
     <Resource Include="Icons\logo2.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.29.3\build\portable-net+sl+win+wpa+wp\Fody.targets" Condition="Exists('..\packages\Fody.1.29.3\build\portable-net+sl+win+wpa+wp\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -394,7 +394,9 @@
                                                                 <TextBlock Text="Entwickler:" Grid.Row="2" />
                                                                 <TextBlock Grid.Column="1" Grid.Row="2">Stefan T.</TextBlock>
                                                                 <TextBlock Text="Lizenz:" Grid.Row="3" />
-                                                                <TextBlock Grid.Column="1" Grid.Row="3" Text="MIT" />
+                                                                <TextBlock Grid.Column="1" Grid.Row="3">
+                                                                    <Hyperlink Click="Hyperlink_Click">GPLv3</Hyperlink>
+                                                                </TextBlock>
                                                             </Grid>
                                                         </StackPanel>
                                                     </Grid>
